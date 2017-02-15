@@ -1,0 +1,14 @@
+﻿  render.cpp
+  physics.cpp
+  main.cpp
+  imgui_impl_glfw_gl3.cpp
+  imgui_draw.cpp
+  imgui_demo.cpp
+  imgui.cpp
+  Generating Code...
+  GL_framework.vcxproj -> C:\Users\pmorales\Documents\Visual Studio 2015\Projects\Mecanica_Project\GL_framework\x64\Debug\GL_framework.exe
+  GL_framework.vcxproj -> C:\Users\pmorales\Documents\Visual Studio 2015\Projects\Mecanica_Project\GL_framework\x64\Debug\GL_framework.pdb (Partial PDB)
+  C:\Users\pmorales\Documents\Visual Studio 2015\Projects\Mecanica_Project\GL_framework\libs\glew32.dll
+  1 File(s) copied
+  C:\Users\pmorales\Documents\Visual Studio 2015\Projects\Mecanica_Project\GL_framework\libs\glfw3.dll
+  1 File(s) copied
