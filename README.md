@@ -1,1 +1,3 @@
-# Physics_OpenGL
+# Physics with OpenGL
+
+Repositorio para la asignatura de Mecanica
