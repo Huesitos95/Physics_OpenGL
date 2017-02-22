@@ -54,7 +54,7 @@ int main(int argc, char** argv){
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	window = glfwCreateWindow(800, 600, "GL_framework", NULL, NULL);
+	window = glfwCreateWindow(1024, 768, "GL_framework", NULL, NULL);
 	if(!window) {
 		glfwTerminate();
 		fprintf(stderr, "Couldn't create GL window\n");

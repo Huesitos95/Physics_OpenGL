@@ -130,13 +130,13 @@ xcopy "$(ProjectDir)libs\glfw3.dll" "$(OutDir)" /y /d</Command>
     <ClCompile Include="include\imgui\imgui_demo.cpp" />
     <ClCompile Include="include\imgui\imgui_draw.cpp" />
     <ClCompile Include="include\imgui\imgui_impl_glfw_gl3.cpp" />
-    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\physics.cpp" />
     <ClCompile Include="src\render.cpp" />
+    <ClCompile Include="src\render_prims.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Particle.h" />
+    <ClInclude Include="src\Solver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

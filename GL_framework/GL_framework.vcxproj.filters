@@ -39,13 +39,13 @@
     <ClCompile Include="src\render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
+    <ClCompile Include="src\render_prims.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Particle.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Solver.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
