@@ -1,7 +1,7 @@
 ﻿  physics.cpp
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(166): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(184): warning C4305: '=': truncation from 'double' to 'float'
-  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Mecanica\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.exe
-  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Mecanica\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.pdb (Partial PDB)
-  0 File(s) copied
-  0 File(s) copied
+c:\users\pau\documents\physics_opengl\gl_framework\src\solver.h(165): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\pau\documents\physics_opengl\gl_framework\src\solver.h(183): warning C4305: '=': truncation from 'double' to 'float'
+  GL_framework.vcxproj -> C:\Users\Pau\Documents\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.exe
+  GL_framework.vcxproj -> C:\Users\Pau\Documents\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.pdb (Partial PDB)
+  0 archivo(s) copiado(s)
+  0 archivo(s) copiado(s)

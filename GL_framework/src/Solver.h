@@ -1,6 +1,5 @@
 #pragma once
 #include <glm\gtc\type_ptr.hpp>
-#include "My_Physics.h"
 
 //Classe Singletone
 class Solver
