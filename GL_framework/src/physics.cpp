@@ -4,6 +4,7 @@
 
 
 bool show_test_window = false;
+bool Euler = false;
 
 void GUI() {
 	{	//FrameRate
@@ -17,6 +18,17 @@ void GUI() {
 		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
 		ImGui::ShowTestWindow(&show_test_window);
 	}
+	if (ImGui::Button("EulerSemiImplicit", ImVec2(150, 50)))
+	{
+		Euler = true;
+		
+	}
+	if (ImGui::Button("Verlet", ImVec2(150, 50)))
+	{
+		Euler = false;
+		
+	}
+
 }
 
 void PhysicsInit() {
@@ -24,7 +36,16 @@ void PhysicsInit() {
 }
 void PhysicsUpdate(float dt) {
 	//TODO
-	Solver::getInstance().EulerSemiImplicit(dt);
+	if (Euler)
+	{
+		Solver::getInstance().EulerSemiImplicit(dt);
+		ImGui::Text("Current Solver: EulerSemiImplicit");
+	}
+	else
+	{
+		Solver::getInstance().Verlet(dt);
+		ImGui::Text("Current Solver: Verlet");
+	}
 }
 void PhysicsCleanup() {
 	//TODO
