@@ -21,12 +21,21 @@ void GUI() {
 	if (ImGui::Button("EulerSemiImplicit", ImVec2(150, 50)))
 	{
 		Euler = true;
-		
+		Solver::getInstance().actualSolver = TipusSolver::EULER;
+		Solver::getInstance().RestartParticle();
 	}
 	if (ImGui::Button("Verlet", ImVec2(150, 50)))
 	{
 		Euler = false;
-		
+		Solver::getInstance().actualSolver = TipusSolver::VERLET;
+		Solver::getInstance().RestartParticle();
+	}
+
+	if (ImGui::Button("Cascada", ImVec2(100, 50)))
+	{
+	}
+	if (ImGui::Button("Font", ImVec2(100, 50)))
+	{
 	}
 
 }
@@ -46,6 +55,9 @@ void PhysicsUpdate(float dt) {
 		Solver::getInstance().Verlet(dt);
 		ImGui::Text("Current Solver: Verlet");
 	}
+	float v=Solver::getInstance().tempsVidaParticula;
+	ImGui::DragFloat("TempsParticula", &Solver::getInstance().tempsVidaParticula, 0.1f, 0, 30, "%.3f", 1.f);
+
 }
 void PhysicsCleanup() {
 	//TODO

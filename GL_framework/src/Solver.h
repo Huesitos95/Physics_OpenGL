@@ -2,6 +2,15 @@
 #include <iostream>
 #include <glm\gtc\type_ptr.hpp>
 
+enum TipusSolver
+{
+	EULER,VERLET
+};
+enum TipusSistema
+{
+	CASCADA,FONT
+};
+
 //Classe Singletone
 class Solver
 {
@@ -16,14 +25,20 @@ public:
 	~Solver();
 	void EulerSemiImplicit(float);
 	void Verlet(float);
+	void Cascada(int);
 	float *partVerts;
 	float *partVertsAnterior;
 	float *partVelocity;
 	float *partForces;
 	float *partTime;
 	float elastic;
+	TipusSolver actualSolver;
+	TipusSistema actualSistema;
 
 	float gravity;
+	float tempsVidaParticula;
+
+	void RestartParticle();
 
 	
 		
@@ -34,6 +49,8 @@ private:
 	void RestartParticle(int);
 	bool DistancePointToPlane(float xAnterior, float yAnterior, float zAnterior, int i, float *normalPla, float dEquacioPla);
 	Solver();
+	int numPartilesRenderitzar;
+	float timerParticula;
 	
 };
 
@@ -43,6 +60,14 @@ namespace LilSpheres {
 	extern void cleanupParticles();
 	extern void updateParticles(int startIdx, int count, float* array_data);
 	extern void drawParticles(int startIdx, int count);
+}
+
+inline void Solver::RestartParticle()
+{
+	for (int i = 0; i < LilSpheres::maxParticles; ++i)
+	{
+		RestartParticle(i);
+	}
 }
 
 inline void Solver::ParticleCollision(float xAnterior, float yAnterior, float zAnterior,int i)
@@ -62,7 +87,7 @@ inline void Solver::ParticleCollision(float xAnterior, float yAnterior, float zA
 	if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
 	{
 		CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		partForces[i * 3 + 1] *= -1;
+		//partForces[i * 3 + 1] *= -1;
 	}
 
 	partForces[i * 3 + 1] = -partForces[i * 3 + 1];
@@ -79,7 +104,7 @@ inline void Solver::ParticleCollision(float xAnterior, float yAnterior, float zA
 	if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
 	{
 		CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		partForces[i * 3 + 1] *= -1;
+		//partForces[i * 3 + 1] *= -1;
 	}
 
 	////PLA ESQUERRA
@@ -94,7 +119,7 @@ inline void Solver::ParticleCollision(float xAnterior, float yAnterior, float zA
 	if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
 	{
 		CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		partForces[i * 3 + 0] *= -1;
+		//partForces[i * 3 + 0] *= -1;
 	}
 
 
@@ -110,7 +135,7 @@ inline void Solver::ParticleCollision(float xAnterior, float yAnterior, float zA
 	if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
 	{
 		CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		partForces[i * 3 + 0] *= -1;
+		//partForces[i * 3 + 0] *= -1;
 	}
 
 
@@ -127,7 +152,7 @@ inline void Solver::ParticleCollision(float xAnterior, float yAnterior, float zA
 	if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
 	{
 		CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		partForces[i * 3 + 2] *= -1;
+		//partForces[i * 3 + 2] *= -1;
 	}
 
 
@@ -144,7 +169,7 @@ inline void Solver::ParticleCollision(float xAnterior, float yAnterior, float zA
 	if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
 	{
 		CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		partForces[i * 3 + 2] *= -1;
+		//partForces[i * 3 + 2] *= -1;
 	}
 
 	
@@ -175,31 +200,14 @@ inline void Solver::CollisionParticlePlane(float xAnterior, float yAnterior, flo
 
 inline void Solver::RestartParticle(int i)
 {
-	//Introducir Posicion Particulas.
-	partVerts[i * 3 + 0] = 1;//((float)rand() / RAND_MAX) * 10.f - 5.0f;
-	partVerts[i * 3 + 1] = 4;//((float)rand() / RAND_MAX) * 10.f;
-	partVerts[i * 3 + 2] = 1;//((float)rand() / RAND_MAX) * 10.f - 5.0f;
+	if (actualSistema == TipusSistema::CASCADA) 
+	{
+		Cascada(i);
+	}
+	else if (actualSistema == TipusSistema::FONT) 
+	{
 	
-	//Introduir Posicions Particules anteriors.
-	partVertsAnterior[i * 3 + 0]=partVerts[i * 3 + 0];
-	partVertsAnterior[i * 3 + 1]=partVerts[i * 3 + 1];
-	partVertsAnterior[i * 3 + 2]=partVerts[i * 3 + 2];
-
-	//Introducir Velocidad Particulas
-	partVelocity[i * 3 + 0] = 0;
-	partVelocity[i * 3 + 1] = 0;
-	partVelocity[i * 3 + 2] = 0;
-
-
-	//Introduir Fuerzas Particulas
-
-	//Todo random, menos la gravedad
-	partForces[i * 3 + 0] = 0;
-	partForces[i * 3 + 1] = rand()*2-1;
-	partForces[i * 3 + 2] = 0;
-
-	//Vida Particula
-	partTime[i] = ((float)rand()*5);
+	}
 }
 
 inline bool Solver::DistancePointToPlane(float xAnterior, float yAnterior, float zAnterior, int i, float * normalPla, float dEquacioPla)
@@ -230,6 +238,11 @@ Solver::Solver()
 	partTime = new float[LilSpheres::maxParticles];
 
 	elastic = 0.5;
+	tempsVidaParticula = 15;
+	numPartilesRenderitzar =100;
+	timerParticula = 0;
+	actualSolver = TipusSolver::VERLET;
+	actualSistema = TipusSistema::CASCADA;
 
 	for (int i = 0; i < LilSpheres::maxParticles; ++i)
 	{
@@ -246,11 +259,20 @@ Solver::~Solver()
 void Solver::EulerSemiImplicit(float dt)
 {
 	float x, y, z;
-	for (int i = 0; i < LilSpheres::maxParticles; i++)
+
+	timerParticula += dt;
+	if (timerParticula >= 0.1 && numPartilesRenderitzar < LilSpheres::maxParticles)
+	{
+		numPartilesRenderitzar += 100;
+		if (numPartilesRenderitzar > LilSpheres::maxParticles) numPartilesRenderitzar = LilSpheres::maxParticles;
+		timerParticula = 0;
+	}
+
+	for (int i = 0; i < numPartilesRenderitzar; i++)
 	{
 		partTime[i] += dt;
 
-		if (partTime[i] < 5)
+		if (partTime[i] < tempsVidaParticula)
 		{
 			//Velocitat
 			partVelocity[i * 3 + 0] = partVelocity[i * 3 + 0] + dt*partForces[i * 3 + 0];
@@ -288,11 +310,19 @@ void Solver::EulerSemiImplicit(float dt)
 inline void Solver::Verlet(float dt)
 {
 	float x, y, z;
-	for (int i = 0; i < LilSpheres::maxParticles; i++)
+	timerParticula += dt;
+	if (timerParticula >= 0.1 && numPartilesRenderitzar < LilSpheres::maxParticles)
+	{
+		numPartilesRenderitzar += 100;
+		if (numPartilesRenderitzar > LilSpheres::maxParticles) numPartilesRenderitzar = LilSpheres::maxParticles;
+		timerParticula = 0;
+	}
+
+	for (int i = 0; i <numPartilesRenderitzar; i++)
 	{
 		partTime[i] += dt;
 
-		if (partTime[i] < 5)
+		if (partTime[i] < tempsVidaParticula)
 		{
 		//Forces
 		partForces[i * 3 + 0] = partForces[i * 3 + 0] * glm::pow(dt,2);
@@ -323,4 +353,64 @@ inline void Solver::Verlet(float dt)
 
 	LilSpheres::updateParticles(0, LilSpheres::maxParticles, partVerts);
 	
+}
+
+inline void Solver::Cascada(int i)
+{
+	if (actualSolver == TipusSolver::VERLET)
+	{
+		//Introducir Posicion Particulas.
+		partVerts[i * 3 + 0] = ((float)rand() / RAND_MAX) * 10.f - 5.0f;
+		partVerts[i * 3 + 1] = ((float)rand() / RAND_MAX) *  0.05f + 6.f;
+		partVerts[i * 3 + 2] = 1.;//((float)rand() / RAND_MAX) * 1.f - .5f;
+
+								  //Introduir Posicions Particules anteriors.
+		partVertsAnterior[i * 3 + 0] = partVerts[i * 3 + 0];
+		partVertsAnterior[i * 3 + 1] = partVerts[i * 3 + 1];
+		partVertsAnterior[i * 3 + 2] = partVerts[i * 3 + 2];
+
+		//Introducir Velocidad Particulas
+		partVelocity[i * 3 + 0] = 0;
+		partVelocity[i * 3 + 1] = 0;
+		partVelocity[i * 3 + 2] = 0;
+
+
+		//Introduir Fuerzas Particulas
+
+		//Todo random, menos la gravedad
+		partForces[i * 3 + 0] = 0;
+		partForces[i * 3 + 1] = gravity * 2;
+		partForces[i * 3 + 2] = ((float)rand()*0.0002f) + 0.000001f;
+
+		//Vida Particula
+		partTime[i] = 0;
+	}
+	else if (actualSolver == TipusSolver::EULER)
+	{
+		//Introducir Posicion Particulas.
+		partVerts[i * 3 + 0] = ((float)rand() / RAND_MAX) * 10.f - 5.0f;
+		partVerts[i * 3 + 1] = ((float)rand() / RAND_MAX) *  0.05f + 6.f;
+		partVerts[i * 3 + 2] = 1.;//((float)rand() / RAND_MAX) * 1.f - .5f;
+
+		//Introduir Posicions Particules anteriors.
+		partVertsAnterior[i * 3 + 0] = partVerts[i * 3 + 0];
+		partVertsAnterior[i * 3 + 1] = partVerts[i * 3 + 1];
+		partVertsAnterior[i * 3 + 2] = partVerts[i * 3 + 2];
+
+		//Introducir Velocidad Particulas
+		partVelocity[i * 3 + 0] = 0;
+		partVelocity[i * 3 + 1] = 0;
+		partVelocity[i * 3 + 2] = 0;
+
+
+		//Introduir Fuerzas Particulas
+
+		//Todo random, menos la gravedad
+		partForces[i * 3 + 0] = 0;
+		partForces[i * 3 + 1] = gravity;
+		partForces[i * 3 + 2] = ((float)rand()*0.0002f) + 0.000001f;
+
+		//Vida Particula
+		partTime[i] = 0;
+	}
 }
