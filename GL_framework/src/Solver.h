@@ -419,7 +419,6 @@ inline void Solver::Cascada(int i)
 inline void Solver::Font(int i) {
 
 	// FALTA ACTUALITZAR, ESTA COPIAT DE CASCADA
-
 	if (actualSolver == TipusSolver::VERLET)
 	{
 		//Introducir Posicion Particulas.
@@ -440,10 +439,11 @@ inline void Solver::Font(int i) {
 
 		//Introduir Fuerzas Particulas
 
-		//Todo random, menos la gravedad
-		partForces[i * 3 + 0] = 0;
-		partForces[i * 3 + 1] = gravity * 2;
-		partForces[i * 3 + 2] = ((float)rand()*0.0002f) + 0.000001f;
+		//TODO
+		// Nose com collons posar aixo ^^
+		partForces[i * 3 + 0] = ((float)rand()*0.002f) - 0.015f;
+		partForces[i * 3 + 1] = ((float)rand()*0.002f) - gravity;
+		partForces[i * 3 + 2] = ((float)rand()*0.002f) - 0.015f;
 
 		//Vida Particula
 		partTime[i] = 0;

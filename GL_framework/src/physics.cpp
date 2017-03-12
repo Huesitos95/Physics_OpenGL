@@ -5,6 +5,7 @@
 
 bool show_test_window = false;
 bool Euler = false;
+bool Cascada = true;
 
 void GUI() {
 	{	//FrameRate
@@ -33,11 +34,15 @@ void GUI() {
 
 	if (ImGui::Button("Cascada", ImVec2(100, 50)))
 	{
+		Cascada = true;
 		Solver::getInstance().actualSistema = CASCADA;
+		Solver::getInstance().RestartParticle();
 	}
 	if (ImGui::Button("Font", ImVec2(100, 50)))
 	{
+		Cascada = false;
 		Solver::getInstance().actualSistema = FONT;
+		Solver::getInstance().RestartParticle();
 	}
 
 }
@@ -59,7 +64,13 @@ void PhysicsUpdate(float dt) {
 	}
 	float v=Solver::getInstance().tempsVidaParticula;
 	ImGui::DragFloat("TempsParticula", &Solver::getInstance().tempsVidaParticula, 0.1f, 0, 30, "%.3f", 1.f);
-
+	
+	if (Cascada) {
+		ImGui::Text("Current System: Cascada");
+	}
+	else {
+		ImGui::Text("Current System: Font");
+	}
 }
 void PhysicsCleanup() {
 	//TODO
