@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <glm\gtc\type_ptr.hpp>
+#include <time.h>
 
 enum TipusSolver
 {
@@ -327,7 +328,7 @@ inline void Solver::Verlet(float dt)
 		{
 		//Forces
 		partForces[i * 3 + 0] = partForces[i * 3 + 0] * glm::pow(dt,2);
-		partForces[i * 3 + 1] = glm::pow(dt, 2) * partForces[i * 3 + 1];// +gravity;
+		partForces[i * 3 + 1] = glm::pow(dt, 2) * partForces[i * 3 + 1];
 		partForces[i * 3 + 2] = glm::pow(dt, 2) * partForces[i * 3 + 2];
 
 
@@ -422,7 +423,7 @@ inline void Solver::Font(int i) {
 	if (actualSolver == TipusSolver::VERLET)
 	{
 		//Introducir Posicion Particulas.
-		partVerts[i * 3 + 0] = ((float)rand() / RAND_MAX) * 10.f - 5.0f;
+		partVerts[i * 3 + 0] = 1;//((float)rand() / RAND_MAX) * 10.f - 5.0f;
 		partVerts[i * 3 + 1] = ((float)rand() / RAND_MAX) *  0.05f + 6.f;
 		partVerts[i * 3 + 2] = 1.;//((float)rand() / RAND_MAX) * 1.f - .5f;
 
@@ -441,9 +442,19 @@ inline void Solver::Font(int i) {
 
 		//TODO
 		// Nose com collons posar aixo ^^
-		partForces[i * 3 + 0] = ((float)rand()*0.002f) - 0.015f;
-		partForces[i * 3 + 1] = ((float)rand()*0.002f) - gravity;
-		partForces[i * 3 + 2] = ((float)rand()*0.002f) - 0.015f;
+		float random = rand() % 1000;
+		random /= 10;
+		random -= 50;
+		partForces[i * 3 + 0] = random;
+
+		random = rand() % 1000;
+		random /= 10;
+		partForces[i * 3 + 1] = random - gravity*2;
+
+		random = rand() % 1000;
+		random /= 10;
+		random -= 50;
+		partForces[i * 3 + 2] = random;
 
 		//Vida Particula
 		partTime[i] = 0;
@@ -451,9 +462,9 @@ inline void Solver::Font(int i) {
 	else if (actualSolver == TipusSolver::EULER)
 	{
 		//Introducir Posicion Particulas.
-		partVerts[i * 3 + 0] = ((float)rand() / RAND_MAX) * 10.f - 5.0f;
+		partVerts[i * 3 + 0] = 1;
 		partVerts[i * 3 + 1] = ((float)rand() / RAND_MAX) *  0.05f + 6.f;
-		partVerts[i * 3 + 2] = 1.;//((float)rand() / RAND_MAX) * 1.f - .5f;
+		partVerts[i * 3 + 2] = 1.;
 
 		//Introduir Posicions Particules anteriors.
 		partVertsAnterior[i * 3 + 0] = partVerts[i * 3 + 0];
@@ -469,9 +480,20 @@ inline void Solver::Font(int i) {
 		//Introduir Fuerzas Particulas
 
 		//Todo random, menos la gravedad
-		partForces[i * 3 + 0] = 0;
-		partForces[i * 3 + 1] = gravity;
-		partForces[i * 3 + 2] = ((float)rand()*0.0002f) + 0.000001f;
+
+		float random = rand() % 100;
+		random /= 10;
+		random -= 5;
+		partForces[i * 3 + 0] = random;
+
+		random = rand() % 100;
+		random /= 10;
+		partForces[i * 3 + 1] = -1*gravity*2;
+
+		random = rand() % 100;
+		random /= 10;
+		random -= 5;
+		partForces[i * 3 + 2] = random;
 
 		//Vida Particula
 		partTime[i] = 0;
