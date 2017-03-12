@@ -26,6 +26,7 @@ public:
 	void EulerSemiImplicit(float);
 	void Verlet(float);
 	void Cascada(int);
+	void Font(int);
 	float *partVerts;
 	float *partVertsAnterior;
 	float *partVelocity;
@@ -206,7 +207,7 @@ inline void Solver::RestartParticle(int i)
 	}
 	else if (actualSistema == TipusSistema::FONT) 
 	{
-	
+		Font(i);
 	}
 }
 
@@ -365,6 +366,68 @@ inline void Solver::Cascada(int i)
 		partVerts[i * 3 + 2] = 1.;//((float)rand() / RAND_MAX) * 1.f - .5f;
 
 								  //Introduir Posicions Particules anteriors.
+		partVertsAnterior[i * 3 + 0] = partVerts[i * 3 + 0];
+		partVertsAnterior[i * 3 + 1] = partVerts[i * 3 + 1];
+		partVertsAnterior[i * 3 + 2] = partVerts[i * 3 + 2];
+
+		//Introducir Velocidad Particulas
+		partVelocity[i * 3 + 0] = 0;
+		partVelocity[i * 3 + 1] = 0;
+		partVelocity[i * 3 + 2] = 0;
+
+
+		//Introduir Fuerzas Particulas
+
+		//Todo random, menos la gravedad
+		partForces[i * 3 + 0] = 0;
+		partForces[i * 3 + 1] = gravity * 2;
+		partForces[i * 3 + 2] = ((float)rand()*0.0002f) + 0.000001f;
+
+		//Vida Particula
+		partTime[i] = 0;
+	}
+	else if (actualSolver == TipusSolver::EULER)
+	{
+		//Introducir Posicion Particulas.
+		partVerts[i * 3 + 0] = ((float)rand() / RAND_MAX) * 10.f - 5.0f;
+		partVerts[i * 3 + 1] = ((float)rand() / RAND_MAX) *  0.05f + 6.f;
+		partVerts[i * 3 + 2] = 1.;//((float)rand() / RAND_MAX) * 1.f - .5f;
+
+		//Introduir Posicions Particules anteriors.
+		partVertsAnterior[i * 3 + 0] = partVerts[i * 3 + 0];
+		partVertsAnterior[i * 3 + 1] = partVerts[i * 3 + 1];
+		partVertsAnterior[i * 3 + 2] = partVerts[i * 3 + 2];
+
+		//Introducir Velocidad Particulas
+		partVelocity[i * 3 + 0] = 0;
+		partVelocity[i * 3 + 1] = 0;
+		partVelocity[i * 3 + 2] = 0;
+
+
+		//Introduir Fuerzas Particulas
+
+		//Todo random, menos la gravedad
+		partForces[i * 3 + 0] = 0;
+		partForces[i * 3 + 1] = gravity;
+		partForces[i * 3 + 2] = ((float)rand()*0.0002f) + 0.000001f;
+
+		//Vida Particula
+		partTime[i] = 0;
+	}
+}
+
+inline void Solver::Font(int i) {
+
+	// FALTA ACTUALITZAR, ESTA COPIAT DE CASCADA
+
+	if (actualSolver == TipusSolver::VERLET)
+	{
+		//Introducir Posicion Particulas.
+		partVerts[i * 3 + 0] = ((float)rand() / RAND_MAX) * 10.f - 5.0f;
+		partVerts[i * 3 + 1] = ((float)rand() / RAND_MAX) *  0.05f + 6.f;
+		partVerts[i * 3 + 2] = 1.;//((float)rand() / RAND_MAX) * 1.f - .5f;
+
+		//Introduir Posicions Particules anteriors.
 		partVertsAnterior[i * 3 + 0] = partVerts[i * 3 + 0];
 		partVertsAnterior[i * 3 + 1] = partVerts[i * 3 + 1];
 		partVertsAnterior[i * 3 + 2] = partVerts[i * 3 + 2];

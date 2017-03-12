@@ -33,9 +33,11 @@ void GUI() {
 
 	if (ImGui::Button("Cascada", ImVec2(100, 50)))
 	{
+		Solver::getInstance().actualSistema = CASCADA;
 	}
 	if (ImGui::Button("Font", ImVec2(100, 50)))
 	{
+		Solver::getInstance().actualSistema = FONT;
 	}
 
 }
