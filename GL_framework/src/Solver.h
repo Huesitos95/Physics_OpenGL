@@ -159,7 +159,7 @@ inline void Solver::ParticleCollision(float xAnterior, float yAnterior, float zA
 
 
 
-	////PLA DAVANT
+	////PLA DARRERA
 	//normal del pla
 	normalPla[0] = 0;
 	normalPla[1] = 0;

@@ -1,15 +1,4 @@
-﻿  physics.cpp
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(185): warning C4101: 'distanciaPla': unreferenced local variable
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(183): warning C4101: 'pimerTermaDistancia': unreferenced local variable
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(235): warning C4305: '=': truncation from 'double' to 'float'
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(445): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(450): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(454): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(484): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(489): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework\src\solver.h(493): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
-  GL_framework.vcxproj -> D:\Enti\3r\Mecanica\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.exe
-  GL_framework.vcxproj -> D:\Enti\3r\Mecanica\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.pdb (Partial PDB)
-  0 archivo(s) copiado(s)
-  0 archivo(s) copiado(s)
+﻿  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Mecanica\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.exe
+  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Mecanica\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.pdb (Partial PDB)
+  0 File(s) copied
+  0 File(s) copied
