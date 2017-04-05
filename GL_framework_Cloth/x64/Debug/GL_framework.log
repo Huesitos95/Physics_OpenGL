@@ -1,4 +1,6 @@
 ﻿  physics.cpp
+c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(179): warning C4101: 'distanciaPla': unreferenced local variable
+c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(177): warning C4101: 'pimerTermaDistancia': unreferenced local variable
   GL_framework.vcxproj -> C:\Users\esalles\Desktop\Mecanica\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.exe
   GL_framework.vcxproj -> C:\Users\esalles\Desktop\Mecanica\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.pdb (Partial PDB)
   0 File(s) copied
