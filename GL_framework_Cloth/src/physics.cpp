@@ -5,6 +5,14 @@
 
 bool show_test_window = false;
 
+namespace ClothMesh
+{
+	extern const int numCols;
+	extern const int numRows;
+	extern const int numVerts;
+	extern void updateClothMesh(float* array_data);
+}
+
 struct Particle
 {
 	float x, y, z, xV, yV, zV, xF, yF, zF;
@@ -32,10 +40,11 @@ struct ParticlesList
 	void Update(float dt)
 	{
 		float x, y, z;
-		for (int i = 0; i < list.size(); i++)
+		for (int i = 1; i < list.size(); i++)
 		{
 			//S'ha de repassar aquesta part.
-
+			if (i + 1 != ClothMesh::numCols)
+			{
 				//Velocitat
 				list[i].xV = list[i].xV + dt*list[i].xF;
 				list[i].yV = list[i].yV + dt*list[i].yF;
@@ -56,6 +65,7 @@ struct ParticlesList
 				list[i].z = list[i].z + dt * list[i].zV;
 
 				ParticleCollision(x, y, z, i);
+			}
 		}
 	}
 	bool DistancePointToPlane(float xAnterior, float yAnterior, float zAnterior, int i, float * normalPla, float dEquacioPla)
@@ -212,27 +222,19 @@ void GUI() {
 	}
 }
 
-namespace ClothMesh
-{
-	extern const int numCols;
-	extern const int numRows;
-	extern const int numVerts;
-	extern void updateClothMesh(float* array_data);
-}
-
 void PhysicsInit() {
 	//TODO
-	float x = 4.5f;
-	float z = 6.5f;
+	float x = -4.5f;
+	float z = -3.5f;
 	float y = 6.0f;
 	
 	for (int j = 0; j < ClothMesh::numRows; j++)
 	{
-		z -= 0.5f;
-		x = 4.5f;
+		z += 0.5f;
+		x = -4.5f;
 		for (int i = 0; i < ClothMesh::numCols; i++)
 		{
-			x -= 0.5;
+			x += 0.5;
 			Particle p(x, y, z);
 			p.xV = 0;
 			p.yV = 0;
