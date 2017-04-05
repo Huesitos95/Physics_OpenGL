@@ -11,6 +11,8 @@ public:
 	Cloth &operator=(Cloth &c) = delete;
 	~Cloth();
 
+	void Update(float);
+
 private:
 	Cloth();
 
@@ -21,6 +23,7 @@ namespace ClothMesh
 {
 	extern const int numCols;
 	extern const int numRows;
+	extern void updateClothMesh(float* array_data);
 }
 
 Cloth::Cloth()
@@ -38,8 +41,14 @@ Cloth::Cloth()
 
 		}
 	}
+	ClothMesh::updateClothMesh(vertex[0]);
 }
 
 Cloth::~Cloth()
 {
+}
+
+void Cloth::Update(float dt)
+{
+	ClothMesh::updateClothMesh(vertex[0]);
 }
