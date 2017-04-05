@@ -13,8 +13,13 @@ struct Particle
 	Particle(float i, float j, float k) { x = i; y = j; z = k; }
 };
 
+struct ParticlesList
+{
+	std::vector<Particle> list;
+};
 
-std::vector<Particle> particles;
+
+ParticlesList particles;
 void GUI() {
 	{	//FrameRate
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -53,10 +58,10 @@ void PhysicsInit() {
 		{
 			x -= 0.5;
 			Particle p(x, y, z);
-			v[particles.size() * 3 + 0] = p.x;
-			v[particles.size() * 3 + 1] = p.y;
-			v[particles.size() * 3 + 2] = p.z;
-			particles.push_back(p);
+			v[particles.list.size() * 3 + 0] = p.x;
+			v[particles.list.size() * 3 + 1] = p.y;
+			v[particles.list.size() * 3 + 2] = p.z;
+			particles.list.push_back(p);
 		}
 	}	
 	ClothMesh::updateClothMesh(v);
