@@ -16,6 +16,17 @@ struct Particle
 struct ParticlesList
 {
 	std::vector<Particle> list;
+	float* ParticlesToFloatPointer()
+	{
+		float* v= new float[list.size()*3];
+		for (int i = 0; i < list.size();i++)
+		{
+			v[i * 3 + 0] = list[i].x;
+			v[i * 3 + 1] = list[i].y;
+			v[i * 3 + 2] = list[i].z;
+		}
+		return v;
+	}
 };
 
 
@@ -47,8 +58,6 @@ void PhysicsInit() {
 	float x = 4.5f;
 	float z = 6.5f;
 	float y = 6.0f;
-
-	v = new float[ClothMesh::numVerts * 3];
 	
 	for (int j = 0; j < ClothMesh::numRows; j++)
 	{
@@ -58,17 +67,14 @@ void PhysicsInit() {
 		{
 			x -= 0.5;
 			Particle p(x, y, z);
-			v[particles.list.size() * 3 + 0] = p.x;
-			v[particles.list.size() * 3 + 1] = p.y;
-			v[particles.list.size() * 3 + 2] = p.z;
 			particles.list.push_back(p);
 		}
 	}	
-	ClothMesh::updateClothMesh(v);
+	ClothMesh::updateClothMesh(particles.ParticlesToFloatPointer());
 }
 void PhysicsUpdate(float dt) {
 	//TODO
-	ClothMesh::updateClothMesh(v);
+	ClothMesh::updateClothMesh(particles.ParticlesToFloatPointer());
 }
 void PhysicsCleanup() {
 	//TODO
