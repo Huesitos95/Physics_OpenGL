@@ -2,6 +2,10 @@
 #include <imgui\imgui_impl_glfw_gl3.h>
 #include "Cloth.h"
 #include <vector>
+#include <GL\glew.h>
+#include <glm\gtc\type_ptr.hpp>
+#include <iostream>
+#include <string>
 
 bool show_test_window = false;
 
@@ -11,6 +15,11 @@ namespace ClothMesh
 	extern const int numRows;
 	extern const int numVerts;
 	extern void updateClothMesh(float* array_data);
+}
+
+namespace Sphere
+{
+	extern void updateSphere(glm::vec3 pos, float radius = 1.f);
 }
 
 struct Particle
@@ -24,6 +33,7 @@ struct ParticlesList
 {
 	std::vector<Particle> list;
 	float elastic = 0.5f;
+	float time;
 	float* ParticlesToFloatPointer()
 	{
 		float* v= new float[list.size()*3];
@@ -36,9 +46,56 @@ struct ParticlesList
 		return v;
 	}
 
+	void ResetValues()
+	{
+		list.clear();
+		float x = -4.5f;
+		float z = -4.5f;
+		float y = 4.0f;
+
+		for (int j = 0; j < ClothMesh::numRows; j++)
+		{
+			z += 0.5f;
+			x = -4.5f;
+			for (int i = 0; i < ClothMesh::numCols; i++)
+			{
+				x += 0.5;
+				Particle p(x, y, z);
+				p.xV = 0;
+				p.yV = 0;
+				p.zV = 0;
+				p.xF = 0;
+				p.yF = -9.8f;
+				p.zF = 0;
+				list.push_back(p);
+			}
+		}
+		float r = (rand() % 1) + 1;
+		glm::vec3 s;
+		s.x = (rand() % 10 - r) - 5;
+		s.y = rand() % 5;
+		s.z = (rand() % 10 - r) - 5;
+		std::cout << s.x << "	" << s.y << "	" << s.z << std::endl;
+		Sphere::updateSphere(s, r);
+
+		ClothMesh::updateClothMesh(ParticlesToFloatPointer());
+	}
+	float Spring(Particle p1, Particle p2)
+	{
+		float resultat = 0;
+
+		return resultat;
+	}
+
 	//Extret de la practica de rebot de les particules
 	void Update(float dt)
 	{
+		time += dt;
+		if (time >= 20)
+		{
+			ResetValues();
+			time = 0;
+		}
 		float x, y, z;
 		for (int i = 1; i < list.size(); i++)
 		{
@@ -203,6 +260,7 @@ struct ParticlesList
 		list[i].yV = list[i].yV - (1 + elastic) * calcVelocity * normalPla[1];
 		list[i].zV = list[i].zV - (1 + elastic) * calcVelocity * normalPla[2];
 	}
+
 };
 
 
@@ -224,28 +282,7 @@ void GUI() {
 
 void PhysicsInit() {
 	//TODO
-	float x = -4.5f;
-	float z = -3.5f;
-	float y = 6.0f;
-	
-	for (int j = 0; j < ClothMesh::numRows; j++)
-	{
-		z += 0.5f;
-		x = -4.5f;
-		for (int i = 0; i < ClothMesh::numCols; i++)
-		{
-			x += 0.5;
-			Particle p(x, y, z);
-			p.xV = 0;
-			p.yV = 0;
-			p.zV = 0;
-			p.xF = 0;
-			p.yF = -9.8f;
-			p.zF = 0;
-			particles.list.push_back(p);
-		}
-	}	
-	ClothMesh::updateClothMesh(particles.ParticlesToFloatPointer());
+	particles.ResetValues();
 }
 void PhysicsUpdate(float dt) {
 	//TODO

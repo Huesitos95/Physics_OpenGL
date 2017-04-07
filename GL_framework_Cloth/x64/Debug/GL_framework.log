@@ -1,7 +1,9 @@
 ﻿  physics.cpp
-c:\users\esalles\desktop\physics_opengl\gl_framework_cloth\src\physics.cpp(189): warning C4101: 'distanciaPla': unreferenced local variable
-c:\users\esalles\desktop\physics_opengl\gl_framework_cloth\src\physics.cpp(187): warning C4101: 'pimerTermaDistancia': unreferenced local variable
-  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.exe
-  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.pdb (Partial PDB)
+d:\physics_opengl\gl_framework_cloth\src\physics.cpp(205): warning C4101: 'distanciaPla': unreferenced local variable
+d:\physics_opengl\gl_framework_cloth\src\physics.cpp(203): warning C4101: 'pimerTermaDistancia': unreferenced local variable
+d:\physics_opengl\gl_framework_cloth\src\physics.cpp(246): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\physics_opengl\gl_framework_cloth\src\physics.cpp(249): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  GL_framework.vcxproj -> D:\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.exe
+  GL_framework.vcxproj -> D:\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.pdb (Partial PDB)
   0 File(s) copied
   0 File(s) copied
