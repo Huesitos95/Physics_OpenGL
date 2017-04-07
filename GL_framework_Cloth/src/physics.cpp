@@ -34,6 +34,7 @@ struct ParticlesList
 	std::vector<Particle> list;
 	float elastic = 0.5f;
 	float time;
+	float damping=0.5f;
 	float* ParticlesToFloatPointer()
 	{
 		float* v= new float[list.size()*3];
@@ -45,7 +46,6 @@ struct ParticlesList
 		}
 		return v;
 	}
-
 	void ResetValues()
 	{
 		list.clear();
@@ -80,13 +80,73 @@ struct ParticlesList
 
 		ClothMesh::updateClothMesh(ParticlesToFloatPointer());
 	}
-	float Spring(Particle p1, Particle p2)
+	float Spring(float p1, float p2,float v1, float v2,float L)
 	{
-		float resultat = 0;
+		//F1 = -(Ke (||P1-P2|| - L12) + Kd (v1-v2) * (P1-P2)/(||P1-P2||) ) * (P1-P2)/(||P1-P2||)
+		float resultat = -(elastic*(abs(p1 - p2) - L)+damping*(v1-v2)*((p1 - p2) / abs(p1 - p2)))*((p1 - p2) / abs(p1 - p2));
 
 		return resultat;
 	}
+	glm::vec3 ForceSpring(int i)
+	{
+		glm::vec3 v(0);
+		float l;
+		//Si esta a la primera fila de la malla
+		if (i < ClothMesh::numCols)
+		{
+			//Si es el primer.
+			if (i == 0)
+			{
+				l= list[i].x - list[i + 1].x;
+				v.x = Spring(list[i].x, list[i + 1].x, list[i].xV, list[i + 1].xV, l);
+			}
+			//Si es l'ultim de la fila.
+			else if (i + 1 == ClothMesh::numCols)
+			{
 
+			}
+		}
+		//Si esta a l'ultima fila de la malla
+		else if (i > list.size() - ClothMesh::numCols)
+		{
+			//Si es el primer de la ultima fila
+			if (i%ClothMesh::numCols == 0)
+			{
+
+			}
+
+			//Si es l'ultim de l'ultima fila
+			else if (i + 1 == list.size())
+			{
+
+			}
+
+		}
+
+		//Si esta en les files del mitg
+		else
+		{
+			//Si es el primer de la fila
+			if (i%ClothMesh::numCols == 0)
+			{
+
+			}
+
+			//L'ultim de la fila
+			else if (i%ClothMesh::numCols == ClothMesh::numCols-1)
+			{
+
+			}
+
+			else
+			{
+
+			}
+
+		}
+
+		return v;
+	}
 	//Extret de la practica de rebot de les particules
 	void Update(float dt)
 	{
@@ -106,7 +166,7 @@ struct ParticlesList
 				list[i].xV = list[i].xV + dt*list[i].xF;
 				list[i].yV = list[i].yV + dt*list[i].yF;
 				list[i].zV = list[i].zV + dt*list[i].zF;
-
+				
 				//Forces
 				list[i].xF = list[i].xV * list[i].xF;
 				list[i].yF = list[i].yV * list[i].yF;

@@ -1,14 +1,23 @@
-﻿  physics.cpp
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(185): warning C4101: 'distanciaPla': unreferenced local variable
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(183): warning C4101: 'pimerTermaDistancia': unreferenced local variable
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(235): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(445): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(450): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(454): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(484): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(489): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\esalles\desktop\mecanica\physics_opengl\gl_framework\src\solver.h(493): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Mecanica\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.exe
-  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Mecanica\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.pdb (Partial PDB)
+﻿  render_prims.cpp
+  render.cpp
+  physics.cpp
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(185): warning C4101: 'distanciaPla': unreferenced local variable
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(183): warning C4101: 'pimerTermaDistancia': unreferenced local variable
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(235): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(445): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(450): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(454): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(484): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(489): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework\src\solver.h(493): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  main.cpp
+  imgui_impl_glfw_gl3.cpp
+  imgui_draw.cpp
+  imgui_demo.cpp
+  imgui.cpp
+  Generating Code...
+  LINK : C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.exe not found or not built by the last incremental link; performing full link
+  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.exe
+  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework\x64\Debug\GL_framework.pdb (Partial PDB)
   0 File(s) copied
   0 File(s) copied
