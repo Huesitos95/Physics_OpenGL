@@ -78,9 +78,9 @@ struct ParticlesList
 			}
 		}
 		r = (rand() % 1) + 1;
-		centerSphere.x = 0;//(rand() % 10 - r) - 5;
-		centerSphere.y = rand() % 5;
-		centerSphere.z = 0;//(rand() % 10 - r) - 5;
+		centerSphere.x = (rand() % 2) - 1;
+		centerSphere.y = (rand() % 2)+2;
+		centerSphere.z = (rand() % 2) - 1;
 		Sphere::updateSphere(centerSphere, r);
 
 		ClothMesh::updateClothMesh(ParticlesToFloatPointer());
@@ -376,6 +376,7 @@ void GUI() {
 		ImGui::DragFloat("Bend", &particles.dampingBend, 0.1f, 0, 30, "%.3f", 1.f);
 		ImGui::DragFloat("Enllongation", &particles.longitud, 0.1f, 0, 30, "%.3f", 1.f);
 		ImGui::DragFloat("Initial Rest Distance", &particles.initalDistancePoints, 0.1f, 0.1, 30, "%.3f", 1.f);
+		ImGui::Text("Time %.1f", particles.time);
 		if (ImGui::Button("Reset", ImVec2(50, 20)))
 		{
 			particles.ResetValues();
