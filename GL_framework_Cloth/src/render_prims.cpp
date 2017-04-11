@@ -8,12 +8,19 @@ bool renderSphere = true;
 bool renderCapsule = false;
 bool renderParticles = false;
 bool renderCloth = true;
+bool renderCube = true;
 
 namespace Sphere {
 	extern void setupSphere(glm::vec3 pos = glm::vec3(0.f, 1.f, 0.f), float radius = 1.f);
 	extern void cleanupSphere();
 	extern void updateSphere(glm::vec3 pos, float radius = 1.f);
 	extern void drawSphere();
+}
+namespace Cube {
+	extern void setupCube();
+	extern void cleanupCube();
+	extern void updateCube();
+	extern void drawCube();
 }
 namespace Capsule {
 	extern void setupCapsule(glm::vec3 posA = glm::vec3(-3.f, 2.f, -2.f), glm::vec3 posB = glm::vec3(-4.f, 2.f, 2.f), float radius = 1.f);
@@ -34,7 +41,6 @@ namespace ClothMesh {
 	extern void updateClothMesh(float* array_data);
 	extern void drawClothMesh();
 }
-
 void setupPrims() {
 	Sphere::setupSphere();
 	Capsule::setupCapsule();
@@ -60,4 +66,7 @@ void renderPrims() {
 	
 	if (renderCloth)
 		ClothMesh::drawClothMesh();
+	
+	if (renderCube)
+		Cube::drawCube();
 }

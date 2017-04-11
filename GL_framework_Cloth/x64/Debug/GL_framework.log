@@ -1,12 +1,7 @@
-﻿  physics.cpp
-d:\enti\3r\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(80): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(81): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(82): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(83): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\enti\3r\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(345): warning C4101: 'distanciaPla': unreferenced local variable
-d:\enti\3r\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(343): warning C4101: 'pimerTermaDistancia': unreferenced local variable
-d:\enti\3r\mecanica\physics_opengl\gl_framework_cloth\src\physics.cpp(378): warning C4305: 'argument': truncation from 'double' to 'float'
-  GL_framework.vcxproj -> D:\Enti\3r\Mecanica\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.exe
-  GL_framework.vcxproj -> D:\Enti\3r\Mecanica\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.pdb (Partial PDB)
+﻿  render_prims.cpp
+  render.cpp
+  Generating Code...
+  GL_framework.vcxproj -> C:\Users\Pau\Documents\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.exe
+  GL_framework.vcxproj -> C:\Users\Pau\Documents\Physics_OpenGL\GL_framework_Cloth\x64\Debug\GL_framework.pdb (Partial PDB)
   0 archivo(s) copiado(s)
   0 archivo(s) copiado(s)

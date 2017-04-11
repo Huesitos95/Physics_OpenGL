@@ -22,6 +22,10 @@ namespace Sphere
 	extern void updateSphere(glm::vec3 pos, float radius);
 }
 
+namespace Box
+{
+	extern void updateCube();
+}
 struct Particle
 {
 	float x, y, z, xV, yV, zV, xF, yF, zF;
