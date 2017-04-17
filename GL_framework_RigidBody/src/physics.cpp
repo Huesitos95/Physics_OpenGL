@@ -22,7 +22,7 @@ namespace Sphere
 	extern void updateSphere(glm::vec3 pos, float radius);
 }
 
-namespace Box
+namespace Cube
 {
 	extern void updateCube();
 }

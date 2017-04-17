@@ -820,29 +820,42 @@ void drawClothMesh() {
 namespace Cube {
 	// CAMBIAR PER CUB, a modificar
 	GLuint cubeVao;
-	GLuint cubeVbo;
-	GLuint cubeShaders;
+	GLuint cubeVbo[2];
+	GLuint cubeShaders[2];
 	GLuint cubeProgram;
 
 	// Copiat de box, falta modificar
 	float cubeVerts[] = {
-		
-		//-5,0,-5 -- 5, 10, 5
-		-5.f,  0.f, -5.f,
-		5.f,  0.f, -5.f,
-		5.f,  0.f,  5.f,
-		-5.f,  0.f,  5.f,
-		-5.f, 10.f, -5.f,
-		5.f, 10.f, -5.f,
-		5.f, 10.f,  5.f,
-		-5.f, 10.f,  5.f,
+		//front
+		-1.0, -1.0,  1.0,
+		1.0, -1.0,  1.0,
+		1.0,  1.0,  1.0,
+		-1.0,  1.0,  1.0,
+		// back
+		-1.0, -1.0, -1.0,
+		1.0, -1.0, -1.0,
+		1.0,  1.0, -1.0,
+		-1.0,  1.0, -1.0,
 	};
 	GLubyte cubeIdx[] = {
-		1, 0, 2, 3, //Floor - TriangleStrip
-		0, 1, 5, 4, //Wall - Lines
-		1, 2, 6, 5, //Wall - Lines
-		2, 3, 7, 6, //Wall - Lines
-		3, 0, 4, 7  //Wall - Lines
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// top
+		1, 5, 6,
+		6, 2, 1,
+		// back
+		7, 6, 5,
+		5, 4, 7,
+		// bottom
+		4, 0, 3,
+		3, 7, 4,
+		// left
+		4, 5, 1,
+		1, 0, 4,
+		// right
+		3, 2, 6,
+		6, 7, 3,
 	};
 
 	//SHADERS CORRECTES
@@ -862,29 +875,56 @@ out_Color = color;\n\
 }";
 
 void setupCube() {
-	
+	/*glGenBuffers(1, &cubeVao);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeVbo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIdx), cubeIdx, GL_STATIC_DRAW);*/
+
+	glGenVertexArrays(1, &cubeVao);
+	glBindVertexArray(cubeVao);
+	glGenBuffers(2, cubeVbo);
+
+	glBindBuffer(GL_ARRAY_BUFFER, cubeVbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, cubeVerts, GL_STATIC_DRAW);
+	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeVbo[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 20, cubeIdx, GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	cubeShaders[0] = compileShader(cube_vertShader, GL_VERTEX_SHADER, "cubeVert");
+	cubeShaders[1] = compileShader(cube_fragShader, GL_FRAGMENT_SHADER, "cubeFrag");
+
+	cubeProgram = glCreateProgram();
+	glAttachShader(cubeProgram, cubeShaders[0]);
+	glAttachShader(cubeProgram, cubeShaders[1]);
+	glBindAttribLocation(cubeProgram, 0, "in_Position");
+	linkProgram(cubeProgram);
 }
 void cleanupCube() {
-	/*glDeleteBuffers(2, clothVbo);
-	glDeleteVertexArrays(1, &clothVao);
+	glDeleteBuffers(2, cubeVbo);
+	glDeleteVertexArrays(1, &cubeVao);
 
-	glDeleteProgram(clothProgram);
-	glDeleteShader(clothShaders[0]);
-	glDeleteShader(clothShaders[1]);*/
+	glDeleteProgram(cubeProgram);
+	glDeleteShader(cubeShaders[0]);
+	glDeleteShader(cubeShaders[1]);
 }
-void updateClothMesh(float *array_data) {
-	
+void updateCube() {
+	// ADAPTAR PEL CUB
 }
 void drawCube() {
-	/*glEnable(GL_PRIMITIVE_RESTART);
-	glBindVertexArray(clothVao);
-	glUseProgram(clothProgram);
-	glUniformMatrix4fv(glGetUniformLocation(clothProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(_MVP));
-	glUniform4f(glGetUniformLocation(clothProgram, "color"), 0.1f, 1.f, 1.f, 0.f);
-	glDrawElements(GL_LINE_LOOP, numVirtualVerts, GL_UNSIGNED_BYTE, 0);
+	glEnable(GL_PRIMITIVE_RESTART);
+	glBindVertexArray(cubeVao);
+	glUseProgram(cubeProgram);
+	glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(_MVP));
+	glUniform4f(glGetUniformLocation(cubeProgram, "color"), 0.1f, 1.f, 1.f, 0.f);
+	glDrawElements(GL_FRONT_AND_BACK, *cubeIdx, GL_UNSIGNED_BYTE, 0);
 
 	glUseProgram(0);
 	glBindVertexArray(0);
-	glDisable(GL_PRIMITIVE_RESTART);*/
+	glDisable(GL_PRIMITIVE_RESTART);
 }
 }

@@ -1,5 +1,4 @@
 #pragma once
-
 //INTENT CLASE CUB PER RENDER
 //POTSER PASAR-HO A RENDER.cpp & Renderprims?
 class Cube
@@ -24,11 +23,6 @@ private:
 namespace Cube
 {
 	extern void updateCube();
-}
-
-Cube::~Cube()
-{
-
 }
 
 void Cube::updateCube()
