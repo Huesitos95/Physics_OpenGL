@@ -15,6 +15,12 @@ void setupCube();
 void cleanupCube();
 void drawCube();
 }
+
+namespace Cube {
+void setupCube();
+void cleanupCube();
+void drawCube();
+}
 namespace Axis {
 void setupAxis();
 void cleanupAxis();
@@ -827,33 +833,33 @@ namespace Cube {
 	// Copiat de box, falta modificar
 	float cubeVerts[] = {
 		//front
-		-1.0, -1.0,  1.0,
-		1.0, -1.0,  1.0,
-		1.0,  1.0,  1.0,
-		-1.0,  1.0,  1.0,
+		-1.0, 1.0,  1.0,
+		1.0, 1.0,  1.0,
+		1.0,  3.0,  1.0,
+		-1.0,  3.0,  1.0,
 		// back
-		-1.0, -1.0, -1.0,
-		1.0, -1.0, -1.0,
-		1.0,  1.0, -1.0,
-		-1.0,  1.0, -1.0,
+		-1.0, 1.0, -1.0,
+		1.0, 1.0, -1.0,
+		1.0,  3.0, -1.0,
+		-1.0,  3.0, -1.0,
 	};
 	GLubyte cubeIdx[] = {
 		// front
 		0, 1, 2,
 		2, 3, 0,
-		// top
+		// right
 		1, 5, 6,
 		6, 2, 1,
 		// back
-		7, 6, 5,
 		5, 4, 7,
-		// bottom
+		7, 6, 5,
+		// left
 		4, 0, 3,
 		3, 7, 4,
-		// left
+		// bottom
 		4, 5, 1,
 		1, 0, 4,
-		// right
+		// top
 		3, 2, 6,
 		6, 7, 3,
 	};
@@ -889,7 +895,7 @@ void setupCube() {
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeVbo[1]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 20, cubeIdx, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * sizeof(cubeIdx), cubeIdx, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -912,8 +918,16 @@ void cleanupCube() {
 	glDeleteShader(cubeShaders[0]);
 	glDeleteShader(cubeShaders[1]);
 }
-void updateCube() {
-	// ADAPTAR PEL CUB
+void updateCube(float* array_data) {
+
+	glBindBuffer(GL_ARRAY_BUFFER, *cubeVbo);
+	float* buff = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	buff = &buff[3 * 8];
+	for (int i = 0; i < 3 * 8; ++i) {
+		buff[i] = array_data[i];
+	}
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 void drawCube() {
 	glEnable(GL_PRIMITIVE_RESTART);
@@ -921,7 +935,7 @@ void drawCube() {
 	glUseProgram(cubeProgram);
 	glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(_MVP));
 	glUniform4f(glGetUniformLocation(cubeProgram, "color"), 0.1f, 1.f, 1.f, 0.f);
-	glDrawElements(GL_FRONT_AND_BACK, *cubeIdx, GL_UNSIGNED_BYTE, 0);
+	glDrawElements(GL_TRIANGLES, sizeof(cubeIdx), GL_UNSIGNED_BYTE, 0);
 
 	glUseProgram(0);
 	glBindVertexArray(0);

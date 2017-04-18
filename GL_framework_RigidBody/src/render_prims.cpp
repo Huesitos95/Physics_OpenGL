@@ -4,10 +4,10 @@
 #include <cstdio>
 
 //Boolean variables allow to show/hide the primitives
-bool renderSphere = true;
+bool renderSphere = false;
 bool renderCapsule = false;
 bool renderParticles = false;
-bool renderCloth = true;
+bool renderCloth = false;
 bool renderCube = true;
 
 namespace Sphere {
@@ -19,7 +19,6 @@ namespace Sphere {
 namespace Cube {
 	extern void setupCube();
 	extern void cleanupCube();
-	extern void updateCube();
 	extern void drawCube();
 }
 namespace Capsule {
@@ -46,18 +45,21 @@ void setupPrims() {
 	Capsule::setupCapsule();
 	LilSpheres::setupParticles(LilSpheres::maxParticles);
 	ClothMesh::setupClothMesh();
+	Cube::setupCube();
 }
 void cleanupPrims() {
 	Sphere::cleanupSphere();
 	Capsule::cleanupCapsule();
 	LilSpheres::cleanupParticles();
 	ClothMesh::cleanupClothMesh();
+	Cube::cleanupCube();
 }
 
 void renderPrims() {
 	if (renderSphere)
 		Sphere::drawSphere();
-	if (renderCapsule)
+
+	/*if (renderCapsule)
 		Capsule::drawCapsule();
 
 	if (renderParticles) {
@@ -66,7 +68,7 @@ void renderPrims() {
 	
 	if (renderCloth)
 		ClothMesh::drawClothMesh();
-	
-	if (renderCube)
-		Cube::drawCube();
+	*/
+
+	Cube::drawCube();
 }
