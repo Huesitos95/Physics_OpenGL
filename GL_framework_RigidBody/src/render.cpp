@@ -831,18 +831,7 @@ namespace Cube {
 	GLuint cubeProgram;
 
 	// Copiat de box, falta modificar
-	float cubeVerts[] = {
-		//front
-		-1.0, 1.0,  1.0,
-		1.0, 1.0,  1.0,
-		1.0,  3.0,  1.0,
-		-1.0,  3.0,  1.0,
-		// back
-		-1.0, 1.0, -1.0,
-		1.0, 1.0, -1.0,
-		1.0,  3.0, -1.0,
-		-1.0,  3.0, -1.0,
-	};
+	float* cubeVerts;
 	GLubyte cubeIdx[] = {
 		// front
 		0, 1, 2,
@@ -884,6 +873,18 @@ void setupCube() {
 	/*glGenBuffers(1, &cubeVao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeVbo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIdx), cubeIdx, GL_STATIC_DRAW);*/
+	cubeVerts =  new float[24]{
+		//front
+		-1.0, 1.0,  1.0,
+		1.0, 1.0,  1.0,
+		1.0,  3.0,  1.0,
+		-1.0,  3.0,  1.0,
+		// back
+		-1.0, 1.0, -1.0,
+		1.0, 1.0, -1.0,
+		1.0,  3.0, -1.0,
+		-1.0,  3.0, -1.0,
+	};
 
 	glGenVertexArrays(1, &cubeVao);
 	glBindVertexArray(cubeVao);
@@ -918,8 +919,9 @@ void cleanupCube() {
 	glDeleteShader(cubeShaders[0]);
 	glDeleteShader(cubeShaders[1]);
 }
-void updateCube(float* array_data) {
 
+void updateCube(float* array_data) {
+	cubeVerts = array_data;
 	glBindBuffer(GL_ARRAY_BUFFER, *cubeVbo);
 	float* buff = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 	buff = &buff[3 * 8];
@@ -929,6 +931,7 @@ void updateCube(float* array_data) {
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+
 void drawCube() {
 	glEnable(GL_PRIMITIVE_RESTART);
 	glBindVertexArray(cubeVao);

@@ -7,18 +7,80 @@
 #include <string>
 
 bool show_test_window = false;
-float cubeVerts[] = {
-	//front
-	-1.0, -1.0,  1.0,
-	1.0, -1.0,  1.0,
-	1.0,  1.0,  1.0,
-	-1.0,  1.0,  1.0,
-	// back
-	-1.0, -1.0, -1.0,
-	1.0, -1.0, -1.0,
-	1.0,  1.0, -1.0,
-	-1.0,  1.0, -1.0,
+
+struct CubeRender
+{
+	std::vector<glm::vec3> cubVerts;
+	CubeRender()
+	{
+		Restart();
+	}
+
+	float* CubeRenderToFloatPointer()
+	{
+		float*r = new float[24];
+		int i = 0;
+		for (glm::vec3 v : cubVerts)
+		{
+			r[0 + i * 3] = v.x;
+			r[1 + i * 3] = v.y;
+			r[2 + i * 3] = v.z;
+		}
+		return r;
+	}
+	glm::vec3& CenterPostion(float size)
+	{
+		glm::vec3 centerPoint;
+
+		centerPoint.x = (rand()%10)-5;
+		if (centerPoint.x - size < -5)centerPoint.x + size;
+		else if (centerPoint.x + size > 5)centerPoint.x - size;
+
+		centerPoint.y = (rand() % 10);
+		if (centerPoint.y - size < 0)centerPoint.y + size;
+		else if (centerPoint.y + size > 10)centerPoint.y - size;
+
+		centerPoint.z = (rand() % 10) - 5;
+		if (centerPoint.z - size < -5)centerPoint.z + size;
+		else if (centerPoint.z + size > 5)centerPoint.z - size;
+		
+
+		return centerPoint;
+	}
+	void Restart()
+	{
+		float size = 0.5;
+		glm::vec3 center = CenterPostion(size);
+		//Front
+		glm::vec3 v = glm::vec3(center.x - size, center.y - size, center.z + size);
+		cubVerts.push_back(v);
+
+		v = glm::vec3(center.x + size, center.y - size, center.z + size);
+		cubVerts.push_back(v);
+
+		v = glm::vec3(center.x + size, center.y + size, center.z + size);
+		cubVerts.push_back(v);
+
+		v = glm::vec3(center.x - size, center.y + size, center.z + size);
+		cubVerts.push_back(v);
+
+		//Back
+		v = glm::vec3(center.x - size, center.y - size, center.z - size);
+		cubVerts.push_back(v);
+
+		v = glm::vec3(center.x + size, center.y - size, center.z - size);
+		cubVerts.push_back(v);
+
+		v = glm::vec3(center.x + size, center.y + size, center.z - size);
+		cubVerts.push_back(v);
+
+		v = glm::vec3(center.x - size, center.y + size, center.z - size);
+		cubVerts.push_back(v);
+	}
+	
 };
+
+CubeRender c;
 
 namespace Sphere
 {
@@ -46,11 +108,12 @@ void GUI() {
 
 void PhysicsInit() {
 	//TODO
-	Cube::updateCube(cubeVerts);
+	
+	Cube::updateCube(c.CubeRenderToFloatPointer());
 }
 void PhysicsUpdate(float dt) {
 	//TODO
-	Cube::updateCube(cubeVerts);
+	Cube::updateCube(c.CubeRenderToFloatPointer());
 }
 void PhysicsCleanup() {
 	//TODO
