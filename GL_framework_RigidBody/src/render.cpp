@@ -921,10 +921,10 @@ void cleanupCube() {
 }
 
 void updateCube(float* array_data) {
-	cubeVerts = array_data;
+	//cubeVerts = array_data;
 	glBindBuffer(GL_ARRAY_BUFFER, *cubeVbo);
 	float* buff = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	buff = &buff[3 * 8];
+	//buff = &buff[3 * 8];
 	for (int i = 0; i < 3 * 8; ++i) {
 		buff[i] = array_data[i];
 	}
