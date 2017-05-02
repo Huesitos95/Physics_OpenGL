@@ -5,6 +5,7 @@
 #include <glm\gtc\type_ptr.hpp>
 #include <iostream>
 #include <string>
+#include <glm\gtc\matrix_transform.hpp>
 
 bool show_test_window = false;
 
@@ -17,7 +18,7 @@ namespace Sphere
 
 namespace Cube
 {
-	extern void updateCube(float* array_data);
+	extern void updateCube(glm::mat4 model);
 }
 
 struct CubeRender
@@ -26,7 +27,7 @@ struct CubeRender
 	float size = 0.5;
 	float maxTime = 20.0f;
 	float currenTime = 0.0f;
-	int numVertexCollision = 0;
+	bool numVertexCollision;
 
 	glm::vec3 center;
 	glm::vec3 velocity;
@@ -72,42 +73,43 @@ struct CubeRender
 	void Restart()
 	{
 		cubVerts.clear();
-		numVertexCollision = 0;
+		numVertexCollision = false;
 		currenTime = 0.0f;
-		center = CenterPostion(size);
+		center =  CenterPostion(size);
 		velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 		force = glm::vec3(0, -9.8f, 0.0f);
 		//Front
-		glm::vec3 v = glm::vec3(center.x - size, center.y - size, center.z + size);
+		glm::vec3 v = glm::vec3(0.0f - size, 0.0f - size, 0.0f + size);
 		cubVerts.push_back(v);
 
-		v = glm::vec3(center.x + size, center.y - size, center.z + size);
+		v = glm::vec3(0.0f + size, 0.0f - size, 0.0f + size);
 		cubVerts.push_back(v);
 
-		v = glm::vec3(center.x + size, center.y + size, center.z + size);
+		v = glm::vec3(0.0f + size, 0.0f + size, 0.0f + size);
 		cubVerts.push_back(v);
 
-		v = glm::vec3(center.x - size, center.y + size, center.z + size);
+		v = glm::vec3(0.0f - size, 0.0f + size, 0.0f + size);
 		cubVerts.push_back(v);
 
 		//Back
-		v = glm::vec3(center.x - size, center.y - size, center.z - size);
+		v = glm::vec3(0.0f - size, 0.0f - size, 0.0f - size);
 		cubVerts.push_back(v);
 
-		v = glm::vec3(center.x + size, center.y - size, center.z - size);
+		v = glm::vec3(0.0f + size, 0.0f - size, 0.0f - size);
 		cubVerts.push_back(v);
 
-		v = glm::vec3(center.x + size, center.y + size, center.z - size);
+		v = glm::vec3(0.0f + size, 0.0f + size, 0.0f - size);
 		cubVerts.push_back(v);
 
-		v = glm::vec3(center.x - size, center.y + size, center.z - size);
+		v = glm::vec3(0.0f - size, 0.0f + size, 0.0f - size);
 		cubVerts.push_back(v);
 	}
 	void CalculateNewVertexPosition()
 	{
 		glm::vec3 pointPrevious;
-		
-		if (numVertexCollision < 2)
+
+		//model = glm::translate(model, center);
+		/*if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[0];
 			cubVerts[0] = glm::vec3(center.x - size, center.y - size, center.z + size);
@@ -115,7 +117,7 @@ struct CubeRender
 		}
 		
 
-		if (numVertexCollision < 2)
+		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[1];
 			cubVerts[1] = glm::vec3(center.x + size, center.y - size, center.z + size);
@@ -123,7 +125,7 @@ struct CubeRender
 		}
 		
 
-		if (numVertexCollision < 2)
+		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[2];
 			cubVerts[2] = glm::vec3(center.x + size, center.y + size, center.z + size);
@@ -131,7 +133,7 @@ struct CubeRender
 		}
 		
 
-		if (numVertexCollision < 2)
+		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[3];
 			cubVerts[3] = glm::vec3(center.x - size, center.y + size, center.z + size);
@@ -140,7 +142,7 @@ struct CubeRender
 		
 
 		//Back
-		if (numVertexCollision < 2)
+		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[4];
 			cubVerts[4] = glm::vec3(center.x - size, center.y - size, center.z - size);
@@ -148,7 +150,7 @@ struct CubeRender
 		}
 		
 
-		if (numVertexCollision < 2)
+		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[5];
 			cubVerts[5] = glm::vec3(center.x + size, center.y - size, center.z - size);
@@ -156,7 +158,7 @@ struct CubeRender
 		}
 		
 
-		if (numVertexCollision < 2)
+		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[6];
 			cubVerts[6] = glm::vec3(center.x + size, center.y + size, center.z - size);
@@ -164,41 +166,35 @@ struct CubeRender
 		}
 		
 
-		if (numVertexCollision < 2)
+		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[7];
 			cubVerts[7] = glm::vec3(center.x - size, center.y + size, center.z - size);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 7);
-		}
+		}*/
 		
 	}
 
 	void Update(float dt)
 	{
+		glm::mat4 model;
+
 		currenTime += dt;
 		if (currenTime >= maxTime)
 		{
 			Restart();
 		}
-		else //if(numVertexCollision<2)
+		else
 		{
-			velocity.x = velocity.x + dt*force.x;
-			velocity.y = velocity.y + dt*force.y;
-			velocity.z = velocity.z + dt*force.z;
-
-			/*force.x = velocity.x * force.x;
-			force.y = velocity.y * force.y;
-			force.z = velocity.z * force.z;*/
+			velocity = velocity + dt*force;
+			//force = velocity*force;
 			
-			previousPosition = center;
+			//previousPosition = center;
 
-			center.x = center.x + dt * velocity.x;
-			center.y = center.y + dt * velocity.y;
-			center.x = center.z + dt * velocity.z;
-
-			CalculateNewVertexPosition();
+			center += dt * velocity;
+			model = glm::translate(model, center);
 		}
-		Cube::updateCube(CubeRenderToFloatPointer());
+		Cube::updateCube(model);
 	}
 
 	bool DistancePointToPlane(float xAnterior, float yAnterior, float zAnterior, int i, float * normalPla, float dEquacioPla)
@@ -317,7 +313,7 @@ struct CubeRender
 		cubVerts[i].x = xAnterior;
 		cubVerts[i].y = yAnterior;
 		cubVerts[i].z = zAnterior;
-		numVertexCollision++;
+		numVertexCollision=true;
 
 		/*float calcVelocity;
 		float pimerTermaDistancia;
@@ -365,7 +361,6 @@ void GUI() {
 void PhysicsInit() {
 	//TODO
 	
-	Cube::updateCube(c.CubeRenderToFloatPointer());
 }
 void PhysicsUpdate(float dt) {
 	//TODO

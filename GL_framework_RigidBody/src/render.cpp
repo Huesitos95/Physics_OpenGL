@@ -829,6 +829,7 @@ namespace Cube {
 	GLuint cubeVbo[2];
 	GLuint cubeShaders[2];
 	GLuint cubeProgram;
+	glm::mat4 transform;
 
 	// Copiat de box, falta modificar
 	float* cubeVerts;
@@ -858,8 +859,9 @@ const char* cube_vertShader =
 	"#version 330\n\
 in vec3 in_Position;\n\
 uniform mat4 mvpMat;\n\
+uniform mat4 model;\n\
 void main() {\n\
-gl_Position = mvpMat * vec4(in_Position, 1.0);\n\
+gl_Position = mvpMat * model * vec4(in_Position, 1.0);\n\
 }";
 const char* cube_fragShader =
 	"#version 330\n\
@@ -870,20 +872,17 @@ out_Color = color;\n\
 }";
 
 void setupCube() {
-	/*glGenBuffers(1, &cubeVao);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeVbo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIdx), cubeIdx, GL_STATIC_DRAW);*/
 	cubeVerts =  new float[24]{
 		//front
-		-1.0, 1.0,  1.0,
-		1.0, 1.0,  1.0,
-		1.0,  3.0,  1.0,
-		-1.0,  3.0,  1.0,
+		-0.5, -0.5,  0.5,
+		0.5, -0.5,  0.5,
+		0.5,  0.5,  0.5,
+		-0.5,  0.5,  0.5,
 		// back
-		-1.0, 1.0, -1.0,
-		1.0, 1.0, -1.0,
-		1.0,  3.0, -1.0,
-		-1.0,  3.0, -1.0,
+		-0.5, -0.5, -0.5,
+		0.5, -0.5, -0.5,
+		0.5,  0.5, -0.5,
+		-0.5,  0.5, -0.5,
 	};
 
 	glGenVertexArrays(1, &cubeVao);
@@ -920,22 +919,15 @@ void cleanupCube() {
 	glDeleteShader(cubeShaders[1]);
 }
 
-void updateCube(float* array_data) {
-	//cubeVerts = array_data;
-	glBindBuffer(GL_ARRAY_BUFFER, *cubeVbo);
-	float* buff = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	//buff = &buff[3 * 8];
-	for (int i = 0; i < 3 * 8; ++i) {
-		buff[i] = array_data[i];
-	}
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+void updateCube(glm::mat4 model) {
+	transform = model;
 }
 
 void drawCube() {
 	glEnable(GL_PRIMITIVE_RESTART);
 	glBindVertexArray(cubeVao);
-	glUseProgram(cubeProgram);
+	glUseProgram(cubeProgram);	
+	glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "model"), 1, GL_FALSE, glm::value_ptr(transform));
 	glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(_MVP));
 	glUniform4f(glGetUniformLocation(cubeProgram, "color"), 0.1f, 1.f, 1.f, 0.f);
 	glDrawElements(GL_TRIANGLES, sizeof(cubeIdx), GL_UNSIGNED_BYTE, 0);
