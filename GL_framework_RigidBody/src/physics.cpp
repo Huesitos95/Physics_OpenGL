@@ -5,6 +5,7 @@
 #include <glm\gtc\type_ptr.hpp>
 #include <iostream>
 #include <string>
+#include <glm/gtc/random.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
 bool show_test_window = false;
@@ -33,6 +34,27 @@ struct CubeRender
 	glm::vec3 velocity;
 	glm::vec3 force;
 	glm::vec3 previousPosition;
+	
+	//Velocitat Angular
+	glm::vec3 w;
+
+	//Moment Lineal
+	glm::vec3 p;
+
+	//Angular Momentum
+	glm::vec3 l;
+
+	//Torque (R)
+	glm::vec3 torque;
+
+	//Quaternion (Rotation)
+	glm::quat quaternion;
+
+	//Inertial Tensor
+	glm::mat3 inertial;
+
+	glm::mat3 iBody = glm::mat3(1.0f/12.0f * (size* size + size * size));
+
 	CubeRender()
 	{
 		Restart();
@@ -77,7 +99,31 @@ struct CubeRender
 		currenTime = 0.0f;
 		center =  CenterPostion(size);
 		velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-		force = glm::vec3(0, -9.8f, 0.0f);
+		force = glm::vec3(glm::gaussRand(0.0f, 5.0f), glm::gaussRand(0.0f, 5.0f), glm::gaussRand(0.0f, 5.0f));
+
+		//Linear Momentum
+		p = glm::vec3(0.0f);
+
+		//Angular Momentum
+		l = glm::vec3(0.0f);
+
+		//Velocitat Angular
+		w = glm::vec3(0.0f, 0.0f, 0.0f);
+
+		//Torque
+		torque = glm::cross(glm::vec3(0.5, 0.0f, 0.5), force);
+
+		//Quaternion
+		quaternion = glm::quat(0.0f, glm::vec3(0.0f));
+
+		//Inertial Tensor
+		inertial = glm::mat3();
+
+		Update(1.0f / 30.0f);
+
+		//Força despres de l'impuls
+		force = glm::vec3(0.0f, -9.8f, 0.0f);
+		
 		//Front
 		glm::vec3 v = glm::vec3(0.0f - size, 0.0f - size, 0.0f + size);
 		cubVerts.push_back(v);
@@ -104,15 +150,14 @@ struct CubeRender
 		v = glm::vec3(0.0f - size, 0.0f + size, 0.0f - size);
 		cubVerts.push_back(v);
 	}
-	void CalculateNewVertexPosition()
+	void CalculateNewVertexPosition(glm::mat4 matrix)
 	{
 		glm::vec3 pointPrevious;
 
-		//model = glm::translate(model, center);
-		/*if (!numVertexCollision)
+		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[0];
-			cubVerts[0] = glm::vec3(center.x - size, center.y - size, center.z + size);
+			cubVerts[0] = matrix * glm::vec4(cubVerts[0],1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 0);
 		}
 		
@@ -120,7 +165,7 @@ struct CubeRender
 		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[1];
-			cubVerts[1] = glm::vec3(center.x + size, center.y - size, center.z + size);
+			cubVerts[1] = matrix * glm::vec4(cubVerts[1], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 1);
 		}
 		
@@ -128,7 +173,7 @@ struct CubeRender
 		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[2];
-			cubVerts[2] = glm::vec3(center.x + size, center.y + size, center.z + size);
+			cubVerts[2] = matrix * glm::vec4(cubVerts[2], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 2);
 		}
 		
@@ -136,7 +181,7 @@ struct CubeRender
 		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[3];
-			cubVerts[3] = glm::vec3(center.x - size, center.y + size, center.z + size);
+			cubVerts[3] = matrix * glm::vec4(cubVerts[3], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 3);
 		}
 		
@@ -145,7 +190,7 @@ struct CubeRender
 		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[4];
-			cubVerts[4] = glm::vec3(center.x - size, center.y - size, center.z - size);
+			cubVerts[4] = matrix * glm::vec4(cubVerts[4], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 4);
 		}
 		
@@ -153,7 +198,7 @@ struct CubeRender
 		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[5];
-			cubVerts[5] = glm::vec3(center.x + size, center.y - size, center.z - size);
+			cubVerts[5] = matrix * glm::vec4(cubVerts[5], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 5);
 		}
 		
@@ -161,7 +206,7 @@ struct CubeRender
 		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[6];
-			cubVerts[6] = glm::vec3(center.x + size, center.y + size, center.z - size);
+			cubVerts[6] = matrix * glm::vec4(cubVerts[6], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 6);
 		}
 		
@@ -169,9 +214,9 @@ struct CubeRender
 		if (!numVertexCollision)
 		{
 			pointPrevious = cubVerts[7];
-			cubVerts[7] = glm::vec3(center.x - size, center.y + size, center.z - size);
+			cubVerts[7] = matrix * glm::vec4(cubVerts[7], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 7);
-		}*/
+		}
 		
 	}
 
@@ -186,13 +231,30 @@ struct CubeRender
 		}
 		else
 		{
-			velocity = velocity + dt*force;
-			//force = velocity*force;
-			
-			//previousPosition = center;
+			//Linear Momentum
+			p += dt*force;
 
-			center += dt * velocity;
+			//Angular Momentum
+			l += dt*torque;
+
+			//Posicio del punt
+			center += dt * p;
+
+			//Quaternion to Mat
+			glm::mat3 matQuaternion = glm::mat3_cast(quaternion);
+			
+			//Inertial Tensor
+			inertial = matQuaternion * glm::inverse(iBody) * glm::transpose(matQuaternion);
+
+			//Velocitat Angular
+			w = inertial * l;
+
+			//Quaternions
+			quaternion += dt*0.5f*glm::quat(0.0f, w)*quaternion;
+			quaternion = glm::normalize(quaternion);
+
 			model = glm::translate(model, center);
+			model *= glm::mat4_cast(quaternion);
 		}
 		Cube::updateCube(model);
 	}
