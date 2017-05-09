@@ -1,4 +1,0 @@
-Donat que el tamany maxim de pujada al moodle es inferior al tamany del projecte en format .zip, et compartim
-el repositori de github
-
-https://github.com/Huesitos95/Physics_OpenGL
