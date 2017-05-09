@@ -16,12 +16,12 @@ namespace Sphere {
 	extern void updateSphere(glm::vec3 pos, float radius = 1.f);
 	extern void drawSphere();
 }
-namespace Cube {
+/*namespace Cube {
 	extern void setupCube();
 	extern void cleanupCube();
 	extern void updateCube();
 	extern void drawCube();
-}
+}*/
 namespace Capsule {
 	extern void setupCapsule(glm::vec3 posA = glm::vec3(-3.f, 2.f, -2.f), glm::vec3 posB = glm::vec3(-4.f, 2.f, 2.f), float radius = 1.f);
 	extern void cleanupCapsule();
@@ -66,7 +66,4 @@ void renderPrims() {
 	
 	if (renderCloth)
 		ClothMesh::drawClothMesh();
-	
-	if (renderCube)
-		Cube::drawCube();
 }

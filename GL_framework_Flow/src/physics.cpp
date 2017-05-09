@@ -22,10 +22,6 @@ namespace Sphere
 	extern void updateSphere(glm::vec3 pos, float radius);
 }
 
-namespace Box
-{
-	extern void updateCube();
-}
 struct Particle
 {
 	float x, y, z, xV, yV, zV, xF, yF, zF;
@@ -60,14 +56,14 @@ struct ParticlesList
 	void ResetValues()
 	{
 		list.clear();
-		float x = -4.5f;
-		float z = -4.5f;
+		float x = -5.5f;
+		float z = -5.5f;
 		float y = 4.0f;
 
 		for (int j = 0; j < ClothMesh::numRows; j++)
 		{
 			z += initalDistancePoints;
-			x = -4.5f;
+			x = -5.5f;
 			for (int i = 0; i < ClothMesh::numCols; i++)
 			{
 				x += initalDistancePoints;
@@ -90,83 +86,6 @@ struct ParticlesList
 		ClothMesh::updateClothMesh(ParticlesToFloatPointer());
 	}
 
-	float Spring(float p1, float p2,float v1, float v2,float L)
-	{
-		//F1 = -(Ke (||P1-P2|| - L12) + Kd (v1-v2) * (P1-P2)/(||P1-P2||) ) * (P1-P2)/(||P1-P2||)
-		float resultat = -(elastic*(abs(p1 - p2) - L)+dampingStretch*(v1-v2)*((p1 - p2) / abs(p1 - p2)))*((p1 - p2) / abs(p1 - p2));
-
-		return resultat;
-	}
-	glm::vec3 ForceSpring(int i)
-	{
-		glm::vec3 v(0);
-		float l;
-		//Si esta a la primera fila de la malla
-		if (i < ClothMesh::numCols)
-		{
-			//Si es el primer.
-			if (i == 0)
-			{
-				//Horizontal
-				l= list[i].x - list[i + 1].x;
-				v.x = Spring(list[i].x, list[i + 1].x, list[i].xV, list[i + 1].xV, l);
-
-				l = list[i].y - list[i + 1].y;
-				v.y = Spring(list[i].y, list[i + 1].y, list[i].yV, list[i + 1].yV, l);
-
-				l = list[i].z - list[i + 1].z;
-				v.z = Spring(list[i].z, list[i + 1].z, list[i].zV, list[i + 1].zV, l);
-
-				//l = list[i].x - list[i + ClothMesh::numCols].x;
-				//v.x = Spring(list[i].x, list[i + ClothMesh::numCols].x, list[i].xV, list[i + ClothMesh::numCols].xV, l);
-			}
-			//Si es l'ultim de la fila.
-			else if (i + 1 == ClothMesh::numCols)
-			{
-
-			}
-		}
-		//Si esta a l'ultima fila de la malla
-		else if (i > list.size() - ClothMesh::numCols)
-		{
-			//Si es el primer de la ultima fila
-			if (i%ClothMesh::numCols == 0)
-			{
-
-			}
-
-			//Si es l'ultim de l'ultima fila
-			else if (i + 1 == list.size())
-			{
-
-			}
-
-		}
-
-		//Si esta en les files del mitg
-		else
-		{
-			//Si es el primer de la fila
-			if (i%ClothMesh::numCols == 0)
-			{
-
-			}
-
-			//L'ultim de la fila
-			else if (i%ClothMesh::numCols == ClothMesh::numCols-1)
-			{
-
-			}
-
-			else
-			{
-
-			}
-
-		}
-
-		return v;
-	}
 	bool DistancePointSphere(int i)
 	{
 		glm::vec3 v (list[i].x - centerSphere.x, list[i].y - centerSphere.y, list[i].z - centerSphere.z);
@@ -400,7 +319,7 @@ void PhysicsInit() {
 }
 void PhysicsUpdate(float dt) {
 	//TODO
-	particles.Update(dt);
+	//particles.Update(dt);
 	ClothMesh::updateClothMesh(particles.ParticlesToFloatPointer());
 }
 void PhysicsCleanup() {
