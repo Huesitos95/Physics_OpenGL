@@ -1,15 +1,15 @@
 ﻿  physics.cpp
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(80): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(81): warning C4552: '+': operator has no effect; expected operator with side-effect
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(82): warning C4552: '-': operator has no effect; expected operator with side-effect
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(84): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(85): warning C4552: '+': operator has no effect; expected operator with side-effect
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(86): warning C4552: '-': operator has no effect; expected operator with side-effect
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(88): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(89): warning C4552: '+': operator has no effect; expected operator with side-effect
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(90): warning C4552: '-': operator has no effect; expected operator with side-effect
-c:\users\esalles\desktop\physics_opengl\gl_framework_rigidbody\src\physics.cpp(93): warning C4172: returning address of local variable or temporary: centerPoint
-  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework_RigidBody\x64\Debug\GL_framework.exe
-  GL_framework.vcxproj -> C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework_RigidBody\x64\Debug\GL_framework.pdb (Partial PDB)
-  0 File(s) copied
-  0 File(s) copied
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(82): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(83): warning C4552: '+': operator has no effect; expected operator with side-effect
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(84): warning C4552: '-': operator has no effect; expected operator with side-effect
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(86): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(87): warning C4552: '+': operator has no effect; expected operator with side-effect
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(88): warning C4552: '-': operator has no effect; expected operator with side-effect
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(90): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(91): warning C4552: '+': operator has no effect; expected operator with side-effect
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(92): warning C4552: '-': operator has no effect; expected operator with side-effect
+d:\enti\3r\mecanica\physics_opengl\gl_framework_rigidbody\src\physics.cpp(95): warning C4172: returning address of local variable or temporary: centerPoint
+  GL_framework.vcxproj -> D:\Enti\3r\Mecanica\Physics_OpenGL\GL_framework_RigidBody\x64\Debug\GL_framework.exe
+  GL_framework.vcxproj -> D:\Enti\3r\Mecanica\Physics_OpenGL\GL_framework_RigidBody\x64\Debug\GL_framework.pdb (Partial PDB)
+  0 archivo(s) copiado(s)
+  0 archivo(s) copiado(s)

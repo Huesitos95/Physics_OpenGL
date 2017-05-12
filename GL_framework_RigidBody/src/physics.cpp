@@ -20,11 +20,12 @@ namespace Sphere
 namespace Cube
 {
 	extern void updateCube(glm::mat4 model);
+	extern float* cubeVerts;
 }
 
 struct CubeRender
 {
-	std::vector<glm::vec3> cubVerts;
+	std::vector<glm::vec3> listVerts;
 	float size = 0.5;
 	float maxTime = 20.0f;
 	float currenTime = 0.0f;
@@ -34,6 +35,7 @@ struct CubeRender
 	glm::vec3 velocity;
 	glm::vec3 force;
 	glm::vec3 previousPosition;
+	glm::mat4 lastMatrix;
 	
 	//Velocitat Angular
 	glm::vec3 w;
@@ -64,7 +66,7 @@ struct CubeRender
 	{
 		float*r = new float[24];
 		int i = 0;
-		for (glm::vec3 v : cubVerts)
+		for (glm::vec3 v : listVerts)
 		{
 			r[0 + i * 3] = v.x;
 			r[1 + i * 3] = v.y;
@@ -94,7 +96,7 @@ struct CubeRender
 	}
 	void Restart()
 	{
-		cubVerts.clear();
+		listVerts.clear();
 		numVertexCollision = false;
 		currenTime = 0.0f;
 		center =  CenterPostion(size);
@@ -119,69 +121,95 @@ struct CubeRender
 		//Inertial Tensor
 		inertial = glm::mat3();
 
+		//Front
+		glm::vec3 v = glm::vec3(0.0f - size, 0.0f - size, 0.0f + size);
+		listVerts.push_back(v);
+
+		v = glm::vec3(0.0f + size, 0.0f - size, 0.0f + size);
+		listVerts.push_back(v);
+
+		v = glm::vec3(0.0f + size, 0.0f + size, 0.0f + size);
+		listVerts.push_back(v);
+
+		v = glm::vec3(0.0f - size, 0.0f + size, 0.0f + size);
+		listVerts.push_back(v);
+
+		//Back
+		v = glm::vec3(0.0f - size, 0.0f - size, 0.0f - size);
+		listVerts.push_back(v);
+
+		v = glm::vec3(0.0f + size, 0.0f - size, 0.0f - size);
+		listVerts.push_back(v);
+
+		v = glm::vec3(0.0f + size, 0.0f + size, 0.0f - size);
+		listVerts.push_back(v);
+
+		v = glm::vec3(0.0f - size, 0.0f + size, 0.0f - size);
+		listVerts.push_back(v);
+
+		lastMatrix = glm::mat4(1.0f);
+
+		//Li donem les forces
 		Update(1.0f / 30.0f);
 
 		//Força despres de l'impuls
 		force = glm::vec3(0.0f, -9.8f, 0.0f);
 		
-		//Front
-		glm::vec3 v = glm::vec3(0.0f - size, 0.0f - size, 0.0f + size);
-		cubVerts.push_back(v);
-
-		v = glm::vec3(0.0f + size, 0.0f - size, 0.0f + size);
-		cubVerts.push_back(v);
-
-		v = glm::vec3(0.0f + size, 0.0f + size, 0.0f + size);
-		cubVerts.push_back(v);
-
-		v = glm::vec3(0.0f - size, 0.0f + size, 0.0f + size);
-		cubVerts.push_back(v);
-
-		//Back
-		v = glm::vec3(0.0f - size, 0.0f - size, 0.0f - size);
-		cubVerts.push_back(v);
-
-		v = glm::vec3(0.0f + size, 0.0f - size, 0.0f - size);
-		cubVerts.push_back(v);
-
-		v = glm::vec3(0.0f + size, 0.0f + size, 0.0f - size);
-		cubVerts.push_back(v);
-
-		v = glm::vec3(0.0f - size, 0.0f + size, 0.0f - size);
-		cubVerts.push_back(v);
+		
 	}
-	void CalculateNewVertexPosition(glm::mat4 matrix)
+	void CalculateNewVertexPosition(glm::mat4 &matrix)
 	{
-		glm::vec3 pointPrevious;
-
-		if (!numVertexCollision)
+		glm::vec3 pointPrevious,point;
+		if (lastMatrix == glm::mat4(1.0f)) {
+			return;
+		}
+		else
 		{
-			pointPrevious = cubVerts[0];
-			cubVerts[0] = matrix * glm::vec4(cubVerts[0],1.0f);
+			for (int i=0; i< listVerts.size(); i++)
+			{
+				if (!numVertexCollision)
+				{
+					pointPrevious = lastMatrix * glm::vec4(Cube::cubeVerts[0 + i * 3], Cube::cubeVerts[1 + i * 3], Cube::cubeVerts[2 + i * 3], 1.0f);
+					listVerts[i] = matrix * glm::vec4(Cube::cubeVerts[0 + i * 3], Cube::cubeVerts[1 + i * 3], Cube::cubeVerts[2 + i * 3], 1.0f);
+					ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, i);
+
+					if (numVertexCollision)
+					{
+						matrix = lastMatrix;
+						listVerts[i] = matrix * glm::vec4(Cube::cubeVerts[0 + i * 3], Cube::cubeVerts[1 + i * 3], Cube::cubeVerts[2 + i * 3], 1.0f);
+					}
+					
+				}
+			}
+		}
+
+		/*if (!numVertexCollision)
+		{
+			pointPrevious = lastMatrix * glm::vec4(Cube::cubeVerts[0], Cube::cubeVerts[1], Cube::cubeVerts[2], 1.0f);
+			listVerts[0] = matrix * glm::vec4(Cube::cubeVerts[0], Cube::cubeVerts[1], Cube::cubeVerts[2],1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 0);
 		}
-		
 
 		if (!numVertexCollision)
 		{
-			pointPrevious = cubVerts[1];
-			cubVerts[1] = matrix * glm::vec4(cubVerts[1], 1.0f);
+			pointPrevious = lastMatrix * glm::vec4(listVerts[1], 1.0f);
+			listVerts[1] = matrix * glm::vec4(listVerts[1], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 1);
 		}
 		
 
 		if (!numVertexCollision)
 		{
-			pointPrevious = cubVerts[2];
-			cubVerts[2] = matrix * glm::vec4(cubVerts[2], 1.0f);
+			pointPrevious = lastMatrix * glm::vec4(listVerts[2], 1.0f);
+			listVerts[2] = matrix * glm::vec4(listVerts[2], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 2);
 		}
 		
 
 		if (!numVertexCollision)
 		{
-			pointPrevious = cubVerts[3];
-			cubVerts[3] = matrix * glm::vec4(cubVerts[3], 1.0f);
+			pointPrevious = pointPrevious = lastMatrix * glm::vec4(listVerts[3], 1.0f);
+			listVerts[3] = matrix * glm::vec4(listVerts[3], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 3);
 		}
 		
@@ -189,34 +217,34 @@ struct CubeRender
 		//Back
 		if (!numVertexCollision)
 		{
-			pointPrevious = cubVerts[4];
-			cubVerts[4] = matrix * glm::vec4(cubVerts[4], 1.0f);
+			pointPrevious = pointPrevious = lastMatrix * glm::vec4(listVerts[4], 1.0f);
+			listVerts[4] = matrix * glm::vec4(listVerts[4], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 4);
 		}
 		
 
 		if (!numVertexCollision)
 		{
-			pointPrevious = cubVerts[5];
-			cubVerts[5] = matrix * glm::vec4(cubVerts[5], 1.0f);
+			pointPrevious = pointPrevious = lastMatrix * glm::vec4(listVerts[5], 1.0f);
+			listVerts[5] = matrix * glm::vec4(listVerts[5], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 5);
 		}
 		
 
 		if (!numVertexCollision)
 		{
-			pointPrevious = cubVerts[6];
-			cubVerts[6] = matrix * glm::vec4(cubVerts[6], 1.0f);
+			pointPrevious = pointPrevious = lastMatrix * glm::vec4(listVerts[6], 1.0f);
+			listVerts[6] = matrix * glm::vec4(listVerts[6], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 6);
 		}
 		
 
 		if (!numVertexCollision)
 		{
-			pointPrevious = cubVerts[7];
-			cubVerts[7] = matrix * glm::vec4(cubVerts[7], 1.0f);
+			pointPrevious = pointPrevious = lastMatrix * glm::vec4(listVerts[7], 1.0f);
+			listVerts[7] = matrix * glm::vec4(listVerts[7], 1.0f);
 			ParticleCollision(pointPrevious.x, pointPrevious.y, pointPrevious.z, 7);
-		}
+		}*/
 		
 	}
 
@@ -228,6 +256,11 @@ struct CubeRender
 		if (currenTime >= maxTime)
 		{
 			Restart();
+		}
+		else if (numVertexCollision)
+		{
+			model = lastMatrix;
+			Cube::updateCube(model);
 		}
 		else
 		{
@@ -255,8 +288,12 @@ struct CubeRender
 
 			model = glm::translate(model, center);
 			model *= glm::mat4_cast(quaternion);
+
+			CalculateNewVertexPosition(model);
+			Cube::updateCube(model);
+			lastMatrix = model;
 		}
-		Cube::updateCube(model);
+
 	}
 
 	bool DistancePointToPlane(float xAnterior, float yAnterior, float zAnterior, int i, float * normalPla, float dEquacioPla)
@@ -269,7 +306,7 @@ struct CubeRender
 		pimerTermaDistancia = (normalPla[0] * xAnterior + normalPla[1] * yAnterior + normalPla[2] * zAnterior + dEquacioPla);
 
 		//Segon terma per calcular la distancia
-		segonTermaDistancia = (normalPla[0] * cubVerts[i].x + normalPla[1] * cubVerts[i].y + normalPla[2] * cubVerts[i].z + dEquacioPla);
+		segonTermaDistancia = (normalPla[0] * listVerts[i].x + normalPla[1] * listVerts[i].y + normalPla[2] * listVerts[i].z + dEquacioPla);
 
 		//Calculem la distancia.
 		distanciaPla = pimerTermaDistancia*segonTermaDistancia;
@@ -372,9 +409,9 @@ struct CubeRender
 	}
 	void CollisionParticlePlane(float xAnterior, float yAnterior, float zAnterior, int i, float *normalPla, float dEquacioPla)
 	{
-		cubVerts[i].x = xAnterior;
-		cubVerts[i].y = yAnterior;
-		cubVerts[i].z = zAnterior;
+		/*listVerts[i].x = xAnterior;
+		listVerts[i].y = yAnterior;
+		listVerts[i].z = zAnterior;*/
 		numVertexCollision=true;
 
 		/*float calcVelocity;
@@ -382,12 +419,12 @@ struct CubeRender
 		float segonTermaDistancia;
 		float distanciaPla;
 
-		segonTermaDistancia = (normalPla[0] * cubVerts[i].x + normalPla[1] * cubVerts[i].y + normalPla[2] * cubVerts[i].z + dEquacioPla);
+		segonTermaDistancia = (normalPla[0] * listVerts[i].x + normalPla[1] * listVerts[i].y + normalPla[2] * listVerts[i].z + dEquacioPla);
 
 		//Calculem la nova posicio del punt: pt+dt= pt'+dt -2(n * pt'+dt + d) * n
-		cubVerts[i].x = cubVerts[i].x - (1 + elastic) * segonTermaDistancia * normalPla[0];
-		cubVerts[i].y = cubVerts[i].y - (1 + elastic) * segonTermaDistancia * normalPla[0];
-		cubVerts[i].z = cubVerts[i].z - (1 + elastic) * segonTermaDistancia * normalPla[0];
+		listVerts[i].x = listVerts[i].x - (1 + elastic) * segonTermaDistancia * normalPla[0];
+		listVerts[i].y = listVerts[i].y - (1 + elastic) * segonTermaDistancia * normalPla[0];
+		listVerts[i].z = listVerts[i].z - (1 + elastic) * segonTermaDistancia * normalPla[0];
 
 		// (n * vt'+dt)
 		calcVelocity = (normalPla[0] * list[i].xV + normalPla[1] * list[i].yV + normalPla[2] * list[i].zV);
