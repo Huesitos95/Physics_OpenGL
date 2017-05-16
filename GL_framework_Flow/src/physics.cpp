@@ -22,24 +22,20 @@ namespace Sphere
 	extern void updateSphere(glm::vec3 pos, float radius);
 }
 
-struct Particle
-{
-	float x, y, z, xV, yV, zV, xF, yF, zF;
-	Particle() {}
-	Particle(float i, float j, float k) { x = i; y = j; z = k; }
-};
-
 struct ParticlesList
 {
-	std::vector<Particle> list;
-	float elastic = 0.5f;
-	float time;
-	float dampingStretch = 0.5f;
-	float dampingShear = 0.5f;
-	float dampingBend = 0.5f;
-	float longitud = 10;
-	float initalDistancePoints = 0.5;
+	//Mesh
+	std::vector<glm::vec3> list;
+	std::vector<glm::vec3> initPos;
+	glm::vec3 kBlood = glm::vec3(1.0f,0.0f,1.0f);
+
+	float time,t,w,A,kItalic;
+	float initalDistancePoints = 0.75;
+
+	//Sphere
 	glm::vec3 centerSphere;
+	glm::vec3 sphereVelocity;
+	glm::vec3 sphereForce;
 	float r = 1.0f;
 
 	float* ParticlesToFloatPointer()
@@ -55,8 +51,22 @@ struct ParticlesList
 	}
 	void ResetValues()
 	{
+		//Sumatori del temps de simulacio
+		t = 0.0f;
+
+		//Freqüencia. Mantenim els valors de la W
+		if(w<1.0f)w = 5.0f;
+
+		//Amplitud de la onada
+		A = 0.2f;
+
+		//La longitud del vector
+		kItalic = kBlood.length();
+
+		//Mesh
 		list.clear();
-		float x = -5.5f;
+		initPos.clear();
+		float x;
 		float z = -5.5f;
 		float y = 4.0f;
 
@@ -67,23 +77,20 @@ struct ParticlesList
 			for (int i = 0; i < ClothMesh::numCols; i++)
 			{
 				x += initalDistancePoints;
-				Particle p(x, y, z);
-				p.xV = 0;
-				p.yV = 0;
-				p.zV = 0;
-				p.xF = 0;
-				p.yF = -9.8f;
-				p.zF = 0;
+				glm::vec3 p(x, y, z);
 				list.push_back(p);
+				initPos.push_back(p);
 			}
 		}
+		ClothMesh::updateClothMesh(ParticlesToFloatPointer());
+
+		//Sphere
 		r = (rand() % 1) + 1;
 		centerSphere.x = (rand() % 2) - 1;
-		centerSphere.y = (rand() % 2)+2;
+		centerSphere.y = (rand() % 4)+2;
 		centerSphere.z = (rand() % 2) - 1;
 		Sphere::updateSphere(centerSphere, r);
-
-		ClothMesh::updateClothMesh(ParticlesToFloatPointer());
+		
 	}
 
 	bool DistancePointSphere(int i)
@@ -102,42 +109,48 @@ struct ParticlesList
 	//Extret de la practica de rebot de les particules
 	void Update(float dt)
 	{
+		//Temps de simulacio
 		time += dt;
 		if (time >= 20)
 		{
 			ResetValues();
 			time = 0;
 		}
-		float x, y, z;
-		for (int i = 1; i < list.size(); i++)
+		//Sumatori de la simulacio
+		t += dt;
+		
+		for (int i = 0; i < list.size(); i++)
 		{
-			//S'ha de repassar aquesta part.
-			if (i + 1 != ClothMesh::numCols)
-			{
-				//Velocitat
-				list[i].xV = list[i].xV + dt*list[i].xF;
-				list[i].yV = list[i].yV + dt*list[i].yF;
-				list[i].zV = list[i].zV + dt*list[i].zF;
-				
-				//Forces
-				list[i].xF = list[i].xV * list[i].xF;
-				list[i].yF = list[i].yV * list[i].yF;
-				list[i].zF = list[i].zV * list[i].zF;
+			glm::vec3 v = (kBlood / kItalic)*A*sin(dot(kBlood, initPos[i]) - w*t);
+			list[i].x = initPos[i].x - v.x;
+			list[i].z = initPos[i].z - v.z;
 
-				//Posicions
-				x = list[i].x;
-				y = list[i].y;
-				z = list[i].z;
-
-				list[i].x = list[i].x + dt * list[i].xV;
-				list[i].y = list[i].y + dt * list[i].yV;
-				list[i].z = list[i].z + dt * list[i].zV;
-
-				ParticleCollision(x, y, z, i);
-			}
+			list[i].y = (glm::vec3(A*cos(dot(kBlood, initPos[i]) - w*t))).y;
 		}
+
+		//float x, y, z;
+		////Velocitat
+		//list[i].xV = list[i].xV + dt*list[i].xF;
+		//list[i].yV = list[i].yV + dt*list[i].yF;
+		//list[i].zV = list[i].zV + dt*list[i].zF;
+
+		////Forces
+		//list[i].xF = list[i].xV * list[i].xF;
+		//list[i].yF = list[i].yV * list[i].yF;
+		//list[i].zF = list[i].zV * list[i].zF;
+
+		////Posicions
+		//x = list[i].x;
+		//y = list[i].y;
+		//z = list[i].z;
+
+		//list[i].x = list[i].x + dt * list[i].xV;
+		//list[i].y = list[i].y + dt * list[i].yV;
+		//list[i].z = list[i].z + dt * list[i].zV;
+
+		////ParticleCollision(x, y, z, i);
 	}
-	bool DistancePointToPlane(float xAnterior, float yAnterior, float zAnterior, int i, float * normalPla, float dEquacioPla)
+	/*bool DistancePointToPlane(float xAnterior, float yAnterior, float zAnterior, int i, float * normalPla, float dEquacioPla)
 	{
 
 		float pimerTermaDistancia;
@@ -281,7 +294,7 @@ struct ParticlesList
 		list[i].xV = list[i].xV - (1 + elastic) * calcVelocity * normalPla[0];
 		list[i].yV = list[i].yV - (1 + elastic) * calcVelocity * normalPla[1];
 		list[i].zV = list[i].zV - (1 + elastic) * calcVelocity * normalPla[2];
-	}
+	}*/
 
 };
 
@@ -294,12 +307,8 @@ void GUI() {
 		
 		//TODO
 		ImGui::Text("Using SemiImplicit Euler System");
-		ImGui::DragFloat("Stretch", &particles.dampingStretch, 0.1f,0, 30, "%.3f", 1.f);
-		ImGui::DragFloat("Shear", &particles.dampingShear, 0.1f, 0, 30, "%.3f", 1.f);
-		ImGui::DragFloat("Bend", &particles.dampingBend, 0.1f, 0, 30, "%.3f", 1.f);
-		ImGui::DragFloat("Enllongation", &particles.longitud, 0.1f, 0, 30, "%.3f", 1.f);
-		ImGui::DragFloat("Initial Rest Distance", &particles.initalDistancePoints, 0.1f, 0.1, 30, "%.3f", 1.f);
 		ImGui::Text("Time %.1f", particles.time);
+		ImGui::DragFloat("Frequence", &particles.w, 0.1f, 1.0f, 10.0f, "%.1f");
 		if (ImGui::Button("Reset", ImVec2(50, 20)))
 		{
 			particles.ResetValues();
@@ -319,7 +328,7 @@ void PhysicsInit() {
 }
 void PhysicsUpdate(float dt) {
 	//TODO
-	//particles.Update(dt);
+	particles.Update(dt);
 	ClothMesh::updateClothMesh(particles.ParticlesToFloatPointer());
 }
 void PhysicsCleanup() {

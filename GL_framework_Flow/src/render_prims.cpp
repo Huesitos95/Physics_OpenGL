@@ -5,10 +5,10 @@
 
 //Boolean variables allow to show/hide the primitives
 bool renderSphere = true;
-bool renderCapsule = false;
-bool renderParticles = false;
+//bool renderCapsule = false;
+//bool renderParticles = false;
 bool renderCloth = true;
-bool renderCube = true;
+//bool renderCube = true;
 
 namespace Sphere {
 	extern void setupSphere(glm::vec3 pos = glm::vec3(0.f, 1.f, 0.f), float radius = 1.f);
@@ -43,26 +43,26 @@ namespace ClothMesh {
 }
 void setupPrims() {
 	Sphere::setupSphere();
-	Capsule::setupCapsule();
-	LilSpheres::setupParticles(LilSpheres::maxParticles);
+	//Capsule::setupCapsule();
+	//LilSpheres::setupParticles(LilSpheres::maxParticles);
 	ClothMesh::setupClothMesh();
 }
 void cleanupPrims() {
 	Sphere::cleanupSphere();
-	Capsule::cleanupCapsule();
-	LilSpheres::cleanupParticles();
+	//Capsule::cleanupCapsule();
+	//LilSpheres::cleanupParticles();
 	ClothMesh::cleanupClothMesh();
 }
 
 void renderPrims() {
 	if (renderSphere)
 		Sphere::drawSphere();
-	if (renderCapsule)
+	/*if (renderCapsule)
 		Capsule::drawCapsule();
 
 	if (renderParticles) {
 		LilSpheres::drawParticles(0, LilSpheres::maxParticles);
-	}
+	}*/
 	
 	if (renderCloth)
 		ClothMesh::drawClothMesh();

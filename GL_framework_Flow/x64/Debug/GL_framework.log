@@ -1,4 +1,9 @@
-﻿  render.cpp
+﻿  physics.cpp
+c:\users\esalles\desktop\physics_opengl\gl_framework_flow\src\physics.cpp(64): warning C4244: '=': conversion from 'glm::tvec3<float,0>::length_type' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework_flow\src\physics.cpp(88): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework_flow\src\physics.cpp(89): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework_flow\src\physics.cpp(90): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\esalles\desktop\physics_opengl\gl_framework_flow\src\physics.cpp(91): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   GL_framework.vcxproj -> C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework_Flow\x64\Debug\GL_framework.exe
   GL_framework.vcxproj -> C:\Users\esalles\Desktop\Physics_OpenGL\GL_framework_Flow\x64\Debug\GL_framework.pdb (Partial PDB)
   0 File(s) copied

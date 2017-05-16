@@ -89,13 +89,13 @@ void GLinit(int width, int height) {
 	_projection = glm::perspective(FOV, (float)width/(float)height, zNear, zFar);
 
 	//Setup shaders & geometry
-	Box::setupCube();
+	//Box::setupCube();
 	Axis::setupAxis();
 	setupPrims();
 }
 
 void GLcleanup() {
-	Box::cleanupCube();
+	//Box::cleanupCube();
 	Axis::cleanupAxis();
 	cleanupPrims();
 }
@@ -114,7 +114,7 @@ void GLrender() {
 	_MVP = _projection * _modelView;
 
 	//render code
-	Box::drawCube();
+	//Box::drawCube();
 	Axis::drawAxis();
 
 	renderPrims();

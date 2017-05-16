@@ -39,8 +39,8 @@
         operator MyVec2() const { return MyVec2(x,y); }
 
 #define IM_VEC4_CLASS_EXTRA                                                 \
-        ImVec4(const MyVec4& f) { x = f.x; y = f.y; z = f.z; w = f.w; }     \
-        operator MyVec4() const { return MyVec4(x,y,z,w); }
+        ImVec4(const MyVec4& f) { x = f.x; y = f.y; z = f.z; t = f.t; }     \
+        operator MyVec4() const { return MyVec4(x,y,z,t); }
 */
 
 //---- Tip: You can add extra functions within the ImGui:: namespace, here or in your own headers files.
