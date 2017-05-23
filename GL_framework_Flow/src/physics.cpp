@@ -170,7 +170,7 @@ void GUI() {
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		
 		//TODO
-		ImGui::Text("Using SemiImplicit Euler System");
+		ImGui::Text("Using Gerstner Wave");
 		ImGui::Text("Time %.1f", particles.time);
 		ImGui::DragFloat("Frequence", &particles.w, 0.1f, 1.0f, 10.0f, "%.1f");
 		ImGui::DragFloat("Density", &particles.density, 0.1f, 15.0f, 20.0f, "%.1f");
