@@ -28,8 +28,9 @@ struct ParticlesList
 	std::vector<glm::vec3> list;
 	std::vector<glm::vec3> initPos;
 	glm::vec3 kBlood = glm::vec3(1.0f,0.0f,1.0f);
+	glm::vec3 y = glm::vec3(0.0f, 1.0f, 0.0f);
 
-	float time,t,w,A,kItalic;
+	float time,t,w,A,kItalic,density,gravity,vSub;
 	float initalDistancePoints = 0.75;
 
 	//Sphere
@@ -37,6 +38,7 @@ struct ParticlesList
 	glm::vec3 sphereVelocity;
 	glm::vec3 sphereForce;
 	float r = 1.0f;
+	float m = 20.0f;
 
 	float* ParticlesToFloatPointer()
 	{
@@ -62,6 +64,15 @@ struct ParticlesList
 
 		//La longitud del vector
 		kItalic = kBlood.length();
+
+		//Gravetat
+		gravity = -9.8f;
+
+		//DensitatFluit
+		density = 15.0f;
+
+		//Volum Desplasat
+		vSub = 0.0f;
 
 		//Mesh
 		list.clear();
@@ -94,19 +105,6 @@ struct ParticlesList
 		
 	}
 
-	bool DistancePointSphere(int i)
-	{
-		glm::vec3 v (list[i].x - centerSphere.x, list[i].y - centerSphere.y, list[i].z - centerSphere.z);
-		float d = glm::pow(v.x, 2) + glm::pow(v.y, 2) + glm::pow(v.z, 2);
-		d = glm::sqrt(d);
-
-		float x = list[i].x - centerSphere.x;
-		float y = list[i].y - centerSphere.y;
-		float z = list[i].z - centerSphere.z;
-
-		return d-r<= 0;
-	}
-
 	//Extret de la practica de rebot de les particules
 	void Update(float dt)
 	{
@@ -123,6 +121,7 @@ struct ParticlesList
 			t += dt;
 			float yPoints=0.0f;
 			int countPoints=0;
+			glm::vec3 bouyancy;
 
 			for (int i = 0; i < list.size(); i++)
 			{
@@ -140,13 +139,17 @@ struct ParticlesList
 
 			//SPHERE
 			//Moure esfera Euler SemiImplicit
-			sphereVelocity = sphereVelocity + dt * sphereForce;
-			sphereForce = sphereVelocity * sphereForce;
+			if (countPoints > 0)
+			{
+				//centerSphere.y = (yPoints / countPoints);
+				float d = (yPoints / countPoints) - (centerSphere.y - r);
+				vSub = d*r*r;
+				bouyancy = density*-gravity*vSub*y;
+				
+			}
+			sphereForce = bouyancy + glm::vec3(0.0f, gravity, 0.0f)*m;
+			sphereVelocity += dt * sphereForce/m;
 			centerSphere = centerSphere + dt * sphereVelocity;
-			if (countPoints > 0)centerSphere.y = (yPoints / countPoints);
-
-			//Comprovar colisions
-			SphereCollision();
 
 			//Actualitzar
 			Sphere::updateSphere(centerSphere, r);
@@ -157,32 +160,6 @@ struct ParticlesList
 		float distanciaPla = (centerSphere.y - r) - point.y;
 		return distanciaPla <= 0;
 	}
-	void SphereCollision()
-	{
-	}
-	/*void CollisionParticlePlane(float xAnterior, float yAnterior, float zAnterior, int i, float *normalPla, float dEquacioPla)
-	{
-		float calcVelocity;
-		float pimerTermaDistancia;
-		float segonTermaDistancia;
-		float distanciaPla;
-
-		segonTermaDistancia = (normalPla[0] * list[i].x + normalPla[1] * list[i].y + normalPla[2] * list[i].z + dEquacioPla);
-
-		//Calculem la nova posicio del punt: pt+dt= pt'+dt -2(n * pt'+dt + d) * n
-		list[i].x = list[i].x - (1 + elastic) * segonTermaDistancia * normalPla[0];
-		list[i].y = list[i].y - (1 + elastic) * segonTermaDistancia * normalPla[0];
-		list[i].z = list[i].z - (1 + elastic) * segonTermaDistancia * normalPla[0];
-
-		// (n * vt'+dt)
-		calcVelocity = (normalPla[0] * list[i].xV+ normalPla[1] * list[i].yV + normalPla[2] * list[i].zV);
-
-		//Calculem la nova velocitat del punt: vt+dt= vt'+dt -2(n * vt'+dt + d) * n
-		list[i].xV = list[i].xV - (1 + elastic) * calcVelocity * normalPla[0];
-		list[i].yV = list[i].yV - (1 + elastic) * calcVelocity * normalPla[1];
-		list[i].zV = list[i].zV - (1 + elastic) * calcVelocity * normalPla[2];
-	}*/
-
 };
 
 
@@ -196,6 +173,8 @@ void GUI() {
 		ImGui::Text("Using SemiImplicit Euler System");
 		ImGui::Text("Time %.1f", particles.time);
 		ImGui::DragFloat("Frequence", &particles.w, 0.1f, 1.0f, 10.0f, "%.1f");
+		ImGui::DragFloat("Density", &particles.density, 0.1f, 15.0f, 20.0f, "%.1f");
+		ImGui::DragFloat("Mass", &particles.m, 0.1f, 20.0f, 30.0f, "%.1f");
 		if (ImGui::Button("Reset", ImVec2(50, 20)))
 		{
 			particles.ResetValues();
