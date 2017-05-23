@@ -87,9 +87,10 @@ struct ParticlesList
 		//Sphere
 		r = (rand() % 1) + 1;
 		centerSphere.x = (rand() % 2) - 1;
-		centerSphere.y = (rand() % 4)+2;
+		centerSphere.y = (rand() % 3)+2;
 		centerSphere.z = (rand() % 2) - 1;
 		Sphere::updateSphere(centerSphere, r);
+		sphereForce.y = -9.8f;
 		
 	}
 
@@ -116,164 +117,50 @@ struct ParticlesList
 			ResetValues();
 			time = 0;
 		}
-		//Sumatori de la simulacio
-		t += dt;
-		
-		for (int i = 0; i < list.size(); i++)
+		else
 		{
-			glm::vec3 v = (kBlood / kItalic)*A*sin(dot(kBlood, initPos[i]) - w*t);
-			list[i].x = initPos[i].x - v.x;
-			list[i].z = initPos[i].z - v.z;
+			//Sumatori de la simulacio
+			t += dt;
+			float yPoints=0.0f;
+			int countPoints=0;
 
-			list[i].y = (glm::vec3(A*cos(dot(kBlood, initPos[i]) - w*t))).y;
+			for (int i = 0; i < list.size(); i++)
+			{
+				glm::vec3 v = (kBlood / kItalic)*A*sin(dot(kBlood, initPos[i]) - w*t);
+				list[i].x = initPos[i].x - v.x;
+				list[i].z = initPos[i].z - v.z;
+
+				list[i].y = (glm::vec3(A*cos(dot(kBlood, initPos[i]) - w*t))).y;
+				if (DistancePointToPoint(list[i]))
+				{
+					yPoints += list[i].y;
+					countPoints++;
+				}
+			}
+
+			//SPHERE
+			//Moure esfera Euler SemiImplicit
+			sphereVelocity = sphereVelocity + dt * sphereForce;
+			sphereForce = sphereVelocity * sphereForce;
+			centerSphere = centerSphere + dt * sphereVelocity;
+			if (countPoints > 0)centerSphere.y = (yPoints / countPoints);
+
+			//Comprovar colisions
+			SphereCollision();
+
+			//Actualitzar
+			Sphere::updateSphere(centerSphere, r);
 		}
-
-		//float x, y, z;
-		////Velocitat
-		//list[i].xV = list[i].xV + dt*list[i].xF;
-		//list[i].yV = list[i].yV + dt*list[i].yF;
-		//list[i].zV = list[i].zV + dt*list[i].zF;
-
-		////Forces
-		//list[i].xF = list[i].xV * list[i].xF;
-		//list[i].yF = list[i].yV * list[i].yF;
-		//list[i].zF = list[i].zV * list[i].zF;
-
-		////Posicions
-		//x = list[i].x;
-		//y = list[i].y;
-		//z = list[i].z;
-
-		//list[i].x = list[i].x + dt * list[i].xV;
-		//list[i].y = list[i].y + dt * list[i].yV;
-		//list[i].z = list[i].z + dt * list[i].zV;
-
-		////ParticleCollision(x, y, z, i);
 	}
-	/*bool DistancePointToPlane(float xAnterior, float yAnterior, float zAnterior, int i, float * normalPla, float dEquacioPla)
+	bool DistancePointToPoint(glm::vec3 point)
 	{
-
-		float pimerTermaDistancia;
-		float segonTermaDistancia;
-		float distanciaPla;
-		//Primer terma per calcular la distancia
-		pimerTermaDistancia = (normalPla[0] * xAnterior + normalPla[1] * yAnterior + normalPla[2] * zAnterior + dEquacioPla);
-
-		//Segon terma per calcular la distancia
-		segonTermaDistancia = (normalPla[0] * list[i].x + normalPla[1] * list[i].y + normalPla[2] * list[i].z + dEquacioPla);
-
-		//Calculem la distancia.
-		distanciaPla = pimerTermaDistancia*segonTermaDistancia;
-
+		float distanciaPla = (centerSphere.y - r) - point.y;
 		return distanciaPla <= 0;
 	}
-	void ParticleCollision(float xAnterior, float yAnterior, float zAnterior, int i)
+	void SphereCollision()
 	{
-		float normalPla[3];
-		float dEquacioPla;
-
-		//PLA INFERIOR
-		//normal del pla
-		normalPla[0] = 0;
-		normalPla[1] = 1;
-		normalPla[2] = 0;
-
-		//D de la equacio del pla
-		dEquacioPla = (-normalPla[0] * -5) - (normalPla[1] * 0) - (normalPla[2] * 5);
-
-		if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
-		{
-			CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		}
-
-		////PLA SUPERIOR
-		//normal del pla
-		normalPla[0] = 0;
-		normalPla[1] = -1;
-		normalPla[2] = 0;
-
-		//D de la equacio del pla
-		dEquacioPla = (-normalPla[0] * -5) - (normalPla[1] * 10) - (normalPla[2] * -5);
-
-		if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
-		{
-			CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		}
-
-		////PLA ESQUERRA
-		//normal del pla
-		normalPla[0] = 1;
-		normalPla[1] = 0;
-		normalPla[2] = 0;
-
-		//D de la equacio del pla
-		dEquacioPla = (-normalPla[0] * -5) - (normalPla[1] * 0) - (normalPla[2] * 5);
-
-		if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
-		{
-			CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		}
-
-
-		////PLA DRETA
-		//normal del pla
-		normalPla[0] = -1;
-		normalPla[1] = 0;
-		normalPla[2] = 0;
-
-		//D de la equacio del pla
-		dEquacioPla = (-normalPla[0] * 5) - (normalPla[1] * 0) - (normalPla[2] * -5);
-
-		if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
-		{
-			CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		}
-
-
-
-		////PLA DAVANT
-		//normal del pla
-		normalPla[0] = 0;
-		normalPla[1] = 0;
-		normalPla[2] = -1;
-
-		//D de la equacio del pla
-		dEquacioPla = (-normalPla[0] * 5) - (normalPla[1] * 0) - (normalPla[2] * 5);
-
-		if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
-		{
-			CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		}
-
-
-
-		////PLA DARRERA
-		//normal del pla
-		normalPla[0] = 0;
-		normalPla[1] = 0;
-		normalPla[2] = 1;
-
-		//D de la equacio del pla
-		dEquacioPla = (-normalPla[0] * 5) - (normalPla[1] * 0) - (normalPla[2] * -5);
-
-		if (DistancePointToPlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla))
-		{
-			CollisionParticlePlane(xAnterior, yAnterior, zAnterior, i, normalPla, dEquacioPla);
-		}
-
-		//ESFERA	
-		if (DistancePointSphere(i))
-		{
-			glm::vec3 vectorDirector(list[i].x - centerSphere.x, list[i].y - centerSphere.y, list[i].z - centerSphere.z);
-			vectorDirector = glm::normalize(vectorDirector);
-			glm::vec3 point = centerSphere + (vectorDirector*r);
-			
-			list[i].x = xAnterior;
-			list[i].y = yAnterior;
-			list[i].z = zAnterior;
-		}
 	}
-	void CollisionParticlePlane(float xAnterior, float yAnterior, float zAnterior, int i, float *normalPla, float dEquacioPla)
+	/*void CollisionParticlePlane(float xAnterior, float yAnterior, float zAnterior, int i, float *normalPla, float dEquacioPla)
 	{
 		float calcVelocity;
 		float pimerTermaDistancia;
